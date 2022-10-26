@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerResourceNotFoundException(ResourceNotFoundException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
 }

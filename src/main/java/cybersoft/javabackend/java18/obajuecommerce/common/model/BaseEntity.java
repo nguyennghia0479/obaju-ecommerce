@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -55,6 +56,21 @@ public class BaseEntity {
     @LastModifiedDate
     @Column(name = Columns.LAST_MODIFIED_AT)
     protected LocalDateTime lastModifiedAt;
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj)
+            return true;
+        if(obj == null || getClass() != obj.getClass())
+            return false;
+        BaseEntity baseEntity = (BaseEntity) obj;
+        return Objects.equals(id, baseEntity.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
     @UtilityClass
     static class Columns {
