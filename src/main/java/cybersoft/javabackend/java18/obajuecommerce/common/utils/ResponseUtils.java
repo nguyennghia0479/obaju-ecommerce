@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.common.utils;
 
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,18 @@ public class ResponseUtils {
     }
 
     public ResponseEntity<ResponseDTO> error(MethodArgumentNotValidException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(ResourceNotFoundException exception, HttpStatus status) {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
