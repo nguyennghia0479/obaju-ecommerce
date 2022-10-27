@@ -4,5 +4,5 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ResourceNotFoundMessageUtils {
-    public static final String ROLE_CODE_NOT_FOUND = "Role code is not existed";
+    public static final String ROLE_ID_NOT_FOUND = "Role id is not existed";
 }

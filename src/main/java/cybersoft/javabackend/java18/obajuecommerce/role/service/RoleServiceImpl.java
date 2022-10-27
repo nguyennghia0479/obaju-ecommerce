@@ -2,7 +2,6 @@ package cybersoft.javabackend.java18.obajuecommerce.role.service;
 
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
-import cybersoft.javabackend.java18.obajuecommerce.role.dto.RoleCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.role.dto.RoleDTO;
 import cybersoft.javabackend.java18.obajuecommerce.role.mapper.RoleMapper;
 import cybersoft.javabackend.java18.obajuecommerce.role.model.Role;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -30,23 +30,23 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDTO findByCode(String code) {
-        return roleRepository.findByCode(code)
+    public RoleDTO findById(UUID id) {
+        return roleRepository.findById(id)
                 .map(RoleMapper.INSTANCE::roleToRoleDTO)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.ROLE_CODE_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.ROLE_ID_NOT_FOUND));
     }
 
     @Override
-    public RoleCreateDTO save(RoleCreateDTO roleCreateDTO) {
-        Role roleCreate = RoleMapper.INSTANCE.roleCreateDTOToRole(roleCreateDTO);
-       roleRepository.save(roleCreate);
-       return RoleMapper.INSTANCE.roleToRoleCreateDTO(roleCreate);
+    public RoleDTO save(RoleDTO roleDTO) {
+        Role roleCreate = RoleMapper.INSTANCE.roleDTOToRole(roleDTO);
+        roleRepository.save(roleCreate);
+        return RoleMapper.INSTANCE.roleToRoleDTO(roleCreate);
     }
 
     @Override
-    public void deleteByCode(String code) {
-       roleRepository.findByCode(code)
-               .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.ROLE_CODE_NOT_FOUND));
-       roleRepository.deleteByCode(code);
+    public void deleteById(UUID id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.ROLE_ID_NOT_FOUND));
+        roleRepository.removeById(role.getId());
     }
 }
