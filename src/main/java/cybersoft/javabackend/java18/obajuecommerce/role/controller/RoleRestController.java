@@ -58,6 +58,6 @@ public class RoleRestController {
     @DeleteMapping("/roles/{id}/add-operations")
     public ResponseEntity<ResponseDTO> removeOperations(@PathVariable("id") UUID roleId,
                                                      @RequestBody List<UUID> operationIds) {
-        return ResponseUtils.get(roleService.removeOperations(roleId, operationIds), HttpStatus.CREATED);
+        return ResponseUtils.get(roleService.removeOperations(roleId, operationIds), HttpStatus.OK);
     }
 }
