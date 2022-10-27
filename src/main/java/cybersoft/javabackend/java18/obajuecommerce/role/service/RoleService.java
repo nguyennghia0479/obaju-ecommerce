@@ -1,16 +1,16 @@
 package cybersoft.javabackend.java18.obajuecommerce.role.service;
 
-import cybersoft.javabackend.java18.obajuecommerce.role.dto.RoleCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.role.dto.RoleDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface RoleService {
     List<RoleDTO> findAll();
 
-    RoleDTO findByCode(String code);
+    RoleDTO findById(UUID id);
 
-    RoleCreateDTO save(RoleCreateDTO roleCreateDTO);
+    RoleDTO save(RoleDTO roleDTO);
 
-    void deleteByCode(String code);
+    void deleteById(UUID id);
 }
