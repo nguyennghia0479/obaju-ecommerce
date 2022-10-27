@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,8 +28,13 @@ public class RoleRestController {
         return ResponseUtils.get(roleService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/roles/include-operations")
+    public ResponseEntity<ResponseDTO> findRolesIncludeOperations() {
+        return ResponseUtils.get(roleService.findAllIncludeOperationDTO(), HttpStatus.OK);
+    }
+
     @GetMapping("/roles/{id}")
-    public ResponseEntity<ResponseDTO> findRoleByCode(@PathVariable("id") UUID id) {
+    public ResponseEntity<ResponseDTO> findRoleById(@PathVariable("id") UUID id) {
         return ResponseUtils.get(roleService.findById(id), HttpStatus.OK);
     }
 
@@ -37,9 +43,21 @@ public class RoleRestController {
         return ResponseUtils.get(roleService.save(roleDTO), HttpStatus.CREATED);
     }
 
+    @PostMapping("/roles/{id}/add-operations")
+    public ResponseEntity<ResponseDTO> addOperations(@PathVariable("id") UUID roleId,
+                                                     @RequestBody List<UUID> operationIds) {
+        return ResponseUtils.get(roleService.addOperations(roleId, operationIds), HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/roles/{id}")
-    public ResponseEntity<ResponseDTO> deleteRoleByCode(@PathVariable("id") UUID id) {
+    public ResponseEntity<ResponseDTO> deleteRoleById(@PathVariable("id") UUID id) {
         roleService.deleteById(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_ROLE_SUCCESS, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/roles/{id}/add-operations")
+    public ResponseEntity<ResponseDTO> removeOperations(@PathVariable("id") UUID roleId,
+                                                     @RequestBody List<UUID> operationIds) {
+        return ResponseUtils.get(roleService.removeOperations(roleId, operationIds), HttpStatus.CREATED);
     }
 }
