@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.role.model;
 
+import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
