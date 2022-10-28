@@ -72,5 +72,16 @@ public class ColumnEntity {
         public static final String NAME = "OE_C_NAME";
         public static final String CODE = "OE_C_CODE";
         public static final String DELETED = "DELETED";
+        public static final String CATEGORY_MAP = "category";
+    }
+
+    @UtilityClass
+    public static class Subcategory {
+        public static final String TABLE_NAME = "OE_SUBCATEGORY";
+        public static final String NAME = "OE_SC_NAME";
+        public static final String CODE = "OE_SC_CODE";
+        public static final String DESCRIPTION = "OE_SC_DESCRIPTION";
+        public static final String DELETED = "DELETED";
+        public static final String CATEGORY_ID = "OE_SC_CATEGORY_ID";
     }
 }

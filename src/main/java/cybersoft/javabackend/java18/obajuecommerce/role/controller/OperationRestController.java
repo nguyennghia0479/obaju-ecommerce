@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/admin")
 @CrossOrigin
 @SecurityRequirement(name = "bearerAuth")
 public class OperationRestController {

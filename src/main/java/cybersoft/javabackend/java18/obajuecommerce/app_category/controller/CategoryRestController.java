@@ -16,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin
-@SecurityRequirement(name = "bearerAuth")
 public class CategoryRestController {
     private final CategoryService categoryService;
 
@@ -34,12 +33,14 @@ public class CategoryRestController {
         return ResponseUtils.get(categoryService.findById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/categories")
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping("/admin/categories")
     public ResponseEntity<ResponseDTO> createCategory(@RequestBody @Valid CategoryCreateDTO categoryCreateDTO) {
-        return ResponseUtils.get(categoryService.save(categoryCreateDTO), HttpStatus.OK);
+        return ResponseUtils.get(categoryService.save(categoryCreateDTO), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/categories/{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/admin/categories/{id}")
     public ResponseEntity<ResponseDTO> deleteCategoryById(@PathVariable("id") UUID id) {
         categoryService.deleteById(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_CATEGORY_SUCCESS, HttpStatus.OK);
