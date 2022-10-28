@@ -43,4 +43,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handlerUserNotFoundException(UserNotFoundException exception) {
         return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(PermissionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerPermissionException(PermissionException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
 }
