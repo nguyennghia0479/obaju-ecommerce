@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").authenticated();
+                .antMatchers("/api/v1/admin/**").authenticated();
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
