@@ -41,4 +41,28 @@ public class ColumnEntity {
         public static final String STATUS = "OE_U_STATUS";
         public static final String DELETE = "DELETED";
     }
+
+    @UtilityClass
+    public static class UserGroup {
+        public static final String TABLE_NAME = "OE_USER_GROUP";
+        public static final String NAME = "OE_UG_NAME";
+        public static final String DESCRIPTION = "OE_UG_DESCRIPTION";
+        public static final String DELETE = "DELETED";
+    }
+
+    @UtilityClass
+    public static class UserGroupMappedUser {
+        public static final String USER_MAPPED_USER_GROUP = "users";
+        public static final String JOIN_TABLE = "OE_USER_GROUP_USER";
+        public static final String JOIN_TABLE_USER_GROUP_ID = "OE_USER_GROUP_ID";
+        public static final String JOIN_TABLE_USER_ID = "OE_USER_ID";
+    }
+
+    @UtilityClass
+    public static class UserGroupMappedRole {
+        public static final String ROLE_MAPPED_USER_GROUP = "roles";
+        public static final String JOIN_TABLE = "OE_USER_GROUP_ROLE";
+        public static final String JOIN_TABLE_USER_GROUP_ID = "OE_USER_GROUP_ID";
+        public static final String JOIN_TABLE_ROLE_ID = "OE_ROLE_ID";
+    }
 }

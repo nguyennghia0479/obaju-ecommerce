@@ -10,13 +10,13 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    @Query("select (count(u) > 0) from User u where u.username = ?1")
+    @Query("select (count(u) > 0) from User u where u.deleted = false and u.username = ?1")
     boolean isExistedByUsername(String username);
 
-    @Query("select (count(u) > 0) from User u where u.email = ?1")
+    @Query("select (count(u) > 0) from User u where u.deleted = false and u.email = ?1")
     boolean isExistedByEmail(String email);
 
-    @Query("select (count(u) > 0) from User u where u.phoneNum = ?1")
+    @Query("select (count(u) > 0) from User u where u.deleted = false and u.phoneNum = ?1")
     boolean isExistedByPhoneNum(String phoneNum);
 
     @Modifying

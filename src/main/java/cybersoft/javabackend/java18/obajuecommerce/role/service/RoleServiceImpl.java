@@ -9,6 +9,8 @@ import cybersoft.javabackend.java18.obajuecommerce.role.model.Operation;
 import cybersoft.javabackend.java18.obajuecommerce.role.model.Role;
 import cybersoft.javabackend.java18.obajuecommerce.role.repository.OperationRepository;
 import cybersoft.javabackend.java18.obajuecommerce.role.repository.RoleRepository;
+import cybersoft.javabackend.java18.obajuecommerce.user.model.UserGroup;
+import cybersoft.javabackend.java18.obajuecommerce.user.repository.UserGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +22,12 @@ import java.util.UUID;
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final OperationRepository operationRepository;
+    private final UserGroupRepository userGroupRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, OperationRepository operationRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, OperationRepository operationRepository, UserGroupRepository userGroupRepository) {
         this.roleRepository = roleRepository;
         this.operationRepository = operationRepository;
+        this.userGroupRepository = userGroupRepository;
     }
 
     @Override
@@ -53,7 +57,9 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.ROLE_ID_NOT_FOUND));
         List<Operation> operations = operationRepository.findAll();
+        List<UserGroup> userGroups = userGroupRepository.findAll();
         operations.forEach(role::removeOperation);
+        userGroups.forEach(ug -> ug.removeRole(role));
         roleRepository.removeById(role.getId());
     }
 

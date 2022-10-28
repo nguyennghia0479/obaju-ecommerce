@@ -2,6 +2,7 @@ package cybersoft.javabackend.java18.obajuecommerce.role.model;
 
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
+import cybersoft.javabackend.java18.obajuecommerce.user.model.UserGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +24,10 @@ import java.util.Set;
 @Table(name = ColumnEntity.Role.TABLE_NAME)
 @Where(clause = "deleted=false")
 public class Role extends BaseEntity {
-    @Column(name = ColumnEntity.Role.NAME, unique = true, nullable = false, length = 20)
+    @Column(name = ColumnEntity.Role.NAME, nullable = false, length = 20)
     private String name;
 
-    @Column(name = ColumnEntity.Role.CODE, unique = true, nullable = false, length = 20)
+    @Column(name = ColumnEntity.Role.CODE, nullable = false, length = 20)
     private String code;
 
     @Column(name = ColumnEntity.Role.DESCRIPTION)
@@ -41,6 +42,9 @@ public class Role extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = ColumnEntity.RoleMappedOperation.JOIN_TABLE_OPERATION_ID)
     )
     private Set<Operation> operations = new LinkedHashSet<>();
+
+    @ManyToMany(mappedBy = ColumnEntity.UserGroupMappedRole.ROLE_MAPPED_USER_GROUP)
+    private Set<UserGroup> userGroups = new LinkedHashSet<>();
 
     public void addOperation(Operation operation) {
         this.operations.add(operation);
