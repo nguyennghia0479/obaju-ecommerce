@@ -8,4 +8,5 @@ public class DeleteMessageUtils {
     public static final String DELETE_OPERATION_SUCCESS = "Delete operation successfully";
     public static final String DELETE_USER_SUCCESS = "Delete user successfully";
     public static final String DELETE_USER_GROUP_SUCCESS = "Delete user group successfully";
+    public static final String DELETE_CATEGORY_SUCCESS = "Delete category successfully";
 }
