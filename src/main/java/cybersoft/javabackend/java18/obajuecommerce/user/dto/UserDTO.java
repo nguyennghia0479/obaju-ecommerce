@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.user.dto;
 
+import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,4 +17,5 @@ public class UserDTO implements Serializable {
     private String email;
     private String fullName;
     private String phoneNum;
+    private User.Status status;
 }

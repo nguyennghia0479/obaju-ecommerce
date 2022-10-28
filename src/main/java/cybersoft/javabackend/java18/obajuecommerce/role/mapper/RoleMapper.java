@@ -15,6 +15,4 @@ public interface RoleMapper {
     Role roleDTOToRole(RoleDTO roleDTO);
 
     RoleIncludeOperationDTO roleToRoleIncludeOperationDTO(Role role);
-
-    Role roleIncludeOperationDTOToRole(RoleIncludeOperationDTO roleIncludeOperationDTO);
 }

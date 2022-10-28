@@ -9,10 +9,10 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,30 +23,34 @@ import java.util.Objects;
 @Table(name = ColumnEntity.User.TABLE_NAME)
 @Where(clause = "deleted=false")
 public class User extends BaseEntity {
-    @Column(name = ColumnEntity.User.USERNAME, unique = true, nullable = false, length = 100)
+    @Column(name = ColumnEntity.User.USERNAME, nullable = false, length = 100)
     private String username;
 
     @Column(name = ColumnEntity.User.PASSWORD, nullable = false, length = 100)
     private String password;
 
-    @Column(name = ColumnEntity.User.EMAIL, unique = true, nullable = false, length = 100)
+    @Column(name = ColumnEntity.User.EMAIL, nullable = false, length = 100)
     private String email;
 
     @Column(name = ColumnEntity.User.FULL_NAME, nullable = false, length = 100)
     private String fullName;
 
-    @Column(name = ColumnEntity.User.PHONE_NUM, unique = true, nullable = false, length = 10)
+    @Column(name = ColumnEntity.User.PHONE_NUM, nullable = false, length = 10)
     private String phoneNum;
 
     @Column(name = ColumnEntity.User.STATUS, length = 20)
-    private Status status = Status.ACTIVE;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(name = ColumnEntity.User.DELETE)
     private boolean deleted = Boolean.FALSE;
 
+    @ManyToMany(mappedBy = ColumnEntity.UserGroupMappedUser.USER_MAPPED_USER_GROUP)
+    private Set<UserGroup> userGroups = new LinkedHashSet<>();
+
     public enum Status {
         ACTIVE,
-        INACTIVE
+        INACTIVE;
     }
 
     @Override
