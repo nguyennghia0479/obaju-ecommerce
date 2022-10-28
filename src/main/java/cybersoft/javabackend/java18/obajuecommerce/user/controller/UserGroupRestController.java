@@ -5,6 +5,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUti
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
 import cybersoft.javabackend.java18.obajuecommerce.user.dto.UserGroupDTO;
 import cybersoft.javabackend.java18.obajuecommerce.user.service.UserGroupService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin
+@SecurityRequirement(name = "bearerAuth")
 public class UserGroupRestController {
     private final UserGroupService userGroupService;
 

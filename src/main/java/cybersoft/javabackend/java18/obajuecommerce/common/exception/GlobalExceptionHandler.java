@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handlerResourceNotFoundException(ResourceNotFoundException exception) {
         return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerUserNotFoundException(UserNotFoundException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
 }
