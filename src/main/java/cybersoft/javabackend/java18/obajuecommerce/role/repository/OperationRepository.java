@@ -16,4 +16,11 @@ public interface OperationRepository extends JpaRepository<Operation, UUID> {
     @Modifying
     @Query("update Operation o set o.deleted = true where o.id = ?1")
     void removeById(UUID id);
+
+    @Query("""
+            select (count(o) > 0)
+            from Operation o left join o.roles r left join r.userGroups ug left join ug.users u
+            where o.name = ?1 and u.username =?2
+            """)
+    boolean isPermittedOperation(String operationName, String username);
 }

@@ -56,10 +56,10 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").permitAll();
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/api/v1/**").authenticated();
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/v1/**").authenticated();
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
