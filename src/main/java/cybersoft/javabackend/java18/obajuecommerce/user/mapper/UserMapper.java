@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.user.mapper;
 
+import cybersoft.javabackend.java18.obajuecommerce.security.dto.RegisterDTO;
 import cybersoft.javabackend.java18.obajuecommerce.user.dto.UserCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.user.dto.UserDTO;
 import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
@@ -15,4 +16,6 @@ public interface UserMapper {
     UserCreateDTO userToUserCreateDTO(User user);
 
     User userCreateDTOToUser(UserCreateDTO userDTO);
+
+    User registerDTOToUser(RegisterDTO registerDTO);
 }
