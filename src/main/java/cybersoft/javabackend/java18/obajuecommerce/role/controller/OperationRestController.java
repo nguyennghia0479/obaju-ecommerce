@@ -5,6 +5,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUti
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
 import cybersoft.javabackend.java18.obajuecommerce.role.dto.OperationDTO;
 import cybersoft.javabackend.java18.obajuecommerce.role.service.OperationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin
+@SecurityRequirement(name = "bearerAuth")
 public class OperationRestController {
     private final OperationService operationService;
 

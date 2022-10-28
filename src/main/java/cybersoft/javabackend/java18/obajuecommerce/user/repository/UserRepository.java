@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -22,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Modifying
     @Query("update User u set u.deleted = true where u.id = ?1")
     void removeById(UUID id);
+
+    @Query("select u from User u where u.status = 'ACTIVE' and u.username = ?1")
+    Optional<User> findByUsername(String username);
 }
