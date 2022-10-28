@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.role.model;
 
+import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Table(name = ColumnEntity.Operation.TABLE_NAME)
 @Where(clause = "deleted=false")
 public class Operation extends BaseEntity {
-    @Column(name = ColumnEntity.Operation.NAME, unique = true, nullable = false, length = 20)
+    @Column(name = ColumnEntity.Operation.NAME, nullable = false, length = 20)
     private String name;
 
     @Column(name = ColumnEntity.Operation.DESCRIPTION)

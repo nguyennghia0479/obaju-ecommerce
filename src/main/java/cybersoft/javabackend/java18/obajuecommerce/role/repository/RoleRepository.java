@@ -11,10 +11,10 @@ import java.util.UUID;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, UUID> {
-    @Query("select (count(r) > 0) from Role r where r.name = ?1")
+    @Query("select (count(r) > 0) from Role r where r.deleted = false and r.name = ?1")
     boolean isExistedByName(String name);
 
-    @Query("select (count(r) > 0) from Role r where r.code = ?1")
+    @Query("select (count(r) > 0) from Role r where r.deleted = false and r.code = ?1")
     boolean isExistedByCode(String code);
 
     @Modifying

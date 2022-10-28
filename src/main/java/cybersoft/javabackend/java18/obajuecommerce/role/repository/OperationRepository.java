@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, UUID> {
-    @Query("select (count(o) > 0) from Operation o where o.name = ?1")
+    @Query("select (count(o) > 0) from Operation o where o.deleted = false and o.name = ?1")
     boolean isExistedByName(String name);
 
     @Modifying
