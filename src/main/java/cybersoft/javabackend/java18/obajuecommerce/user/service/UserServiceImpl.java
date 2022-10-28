@@ -9,6 +9,7 @@ import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
 import cybersoft.javabackend.java18.obajuecommerce.user.model.UserGroup;
 import cybersoft.javabackend.java18.obajuecommerce.user.repository.UserGroupRepository;
 import cybersoft.javabackend.java18.obajuecommerce.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,13 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserGroupRepository userGroupRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserGroupRepository userGroupRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
+
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreateDTO save(UserCreateDTO userCreateDTO) {
+        userCreateDTO.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
         User userCreate = UserMapper.INSTANCE.userCreateDTOToUser(userCreateDTO);
         userCreate.setStatus(User.Status.ACTIVE);
         userRepository.save(userCreate);
