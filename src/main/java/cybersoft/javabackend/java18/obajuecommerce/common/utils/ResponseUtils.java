@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.common.utils;
 
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.PermissionException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.UserNotFoundException;
@@ -88,6 +89,18 @@ public class ResponseUtils {
     }
 
     public ResponseEntity<ResponseDTO> error(PermissionException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(FileException exception, HttpStatus status) {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)

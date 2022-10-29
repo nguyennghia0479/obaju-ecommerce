@@ -10,4 +10,6 @@ public class ResourceNotFoundMessageUtils {
     public static final String USER_GROUP_ID_NOT_FOUND = "User group id is not existed";
     public static final String CATEGORY_ID_NOT_FOUND = "Category id is not existed";
     public static final String SUBCATEGORY_ID_NOT_FOUND = "Subcategory id is not existed";
+    public static final String IMAGE_ID_NOT_FOUND = "Image id is not existed";
+    public static final String LOAD_IMAGE_GET_ERROR = "Could not load because file is not exists or read able";
 }
