@@ -84,4 +84,11 @@ public class ColumnEntity {
         public static final String DELETED = "DELETED";
         public static final String CATEGORY_ID = "OE_SC_CATEGORY_ID";
     }
+
+    @UtilityClass
+    public static class Image {
+        public static final String TABLE_NAME = "OE_IMAGE";
+        public static final String NAME = "OE_I_NAME";
+        public static final String IMAGE_URL = "OE_I_IMAGE_URL";
+    }
 }
