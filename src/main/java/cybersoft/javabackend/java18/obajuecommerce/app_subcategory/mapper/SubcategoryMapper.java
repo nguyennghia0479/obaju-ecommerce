@@ -2,7 +2,7 @@ package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.mapper;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryUpdateDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryIncludeProductDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,7 +13,7 @@ public interface SubcategoryMapper {
 
     SubcategoryDTO subcategoryToSubcategoryDTO(Subcategory subcategory);
 
-    Subcategory subcategoryCreateDTOToSubcategory(SubcategoryCreateDTO subcategoryCreateDTO);
+    SubcategoryIncludeProductDTO subcategoryToSubcategoryIncludeProductDTO(Subcategory subcategory);
 
-    Subcategory subcategoryUpdateDTOToSubcategory(SubcategoryUpdateDTO subcategoryUpdateDTO);
+    Subcategory subcategoryCreateDTOToSubcategory(SubcategoryCreateDTO subcategoryCreateDTO);
 }

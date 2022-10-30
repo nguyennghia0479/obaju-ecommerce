@@ -49,4 +49,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handlerPermissionException(PermissionException exception) {
         return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FileException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerFileException(FileException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DeleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerDeleteException(DeleteException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerDuplicateException(DuplicateException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
 }

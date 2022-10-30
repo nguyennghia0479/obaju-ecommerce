@@ -83,5 +83,27 @@ public class ColumnEntity {
         public static final String DESCRIPTION = "OE_SC_DESCRIPTION";
         public static final String DELETED = "DELETED";
         public static final String CATEGORY_ID = "OE_SC_CATEGORY_ID";
+        public static final String SUBCATEGORY_MAP = "subcategory";
+    }
+
+    @UtilityClass
+    public static class Image {
+        public static final String TABLE_NAME = "OE_IMAGE";
+        public static final String NAME = "OE_I_NAME";
+        public static final String IMAGE_URL = "OE_I_IMAGE_URL";
+        public static final String PRODUCT_ID = "OE_I_PRODUCT_ID";
+    }
+
+    @UtilityClass
+    public static class Product {
+        public static final String TABLE_NAME = "OE_PRODUCT";
+        public static final String NAME = "OE_P_NAME";
+        public static final String CODE = "OE_P_CODE";
+        public static final String AVATAR_URL = "OE_P_AVATAR_URL";
+        public static final String PRICE = "OE_P_PRICE";
+        public static final String COLOR = "OE_P_COLOR";
+        public static final String DELETED = "DELETED";
+        public static final String SUBCATEGORY_ID = "OE_P_SUBCATEGORY_ID";
+        public static final String PRODUCT_MAP = "product";
     }
 }

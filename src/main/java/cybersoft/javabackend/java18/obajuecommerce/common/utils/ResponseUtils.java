@@ -1,12 +1,12 @@
 package cybersoft.javabackend.java18.obajuecommerce.common.utils;
 
-import cybersoft.javabackend.java18.obajuecommerce.common.exception.PermissionException;
-import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
-import cybersoft.javabackend.java18.obajuecommerce.common.exception.UserNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.*;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import lombok.experimental.UtilityClass;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.validation.ConstraintViolationException;
@@ -88,6 +88,56 @@ public class ResponseUtils {
     }
 
     public ResponseEntity<ResponseDTO> error(PermissionException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(FileException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(BindingResult result, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(result.getAllErrors().stream()
+                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                .toList())
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(DeleteException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(false)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
+
+    public ResponseEntity<ResponseDTO> error(DuplicateException exception, HttpStatus status) {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
