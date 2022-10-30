@@ -12,4 +12,6 @@ public class ResourceNotFoundMessageUtils {
     public static final String SUBCATEGORY_ID_NOT_FOUND = "Subcategory id is not existed";
     public static final String IMAGE_ID_NOT_FOUND = "Image id is not existed";
     public static final String LOAD_IMAGE_GET_ERROR = "Could not load because file is not exists or read able";
+    public static final String PRODUCT_ID_NOT_FOUND = "Product id is not existed";
+    public static final String PRODUCT_NAME_NOT_FOUND = "Product name is not existed";
 }

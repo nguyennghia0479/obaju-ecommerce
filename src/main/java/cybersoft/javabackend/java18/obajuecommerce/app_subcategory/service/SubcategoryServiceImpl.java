@@ -4,11 +4,14 @@ import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.repository.CategoryRepository;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryIncludeProductDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryUpdateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.mapper.SubcategoryMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.repository.SubcategoryRepository;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +31,18 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     }
 
     @Override
-    public List<SubcategoryDTO> findAll() {
-        return subcategoryRepository.findAll()
+    public List<SubcategoryIncludeProductDTO> findAll() {
+        return subcategoryRepository.getAll()
                 .stream()
-                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryDTO)
+                .distinct()
+                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryIncludeProductDTO)
                 .toList();
     }
 
     @Override
-    public SubcategoryDTO findById(UUID id) {
+    public SubcategoryIncludeProductDTO findById(UUID id) {
         return subcategoryRepository.findById(id)
-                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryDTO)
+                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryIncludeProductDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.SUBCATEGORY_ID_NOT_FOUND));
     }
 
@@ -65,7 +69,9 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     public void deleteById(UUID id) {
         Subcategory subcategory = subcategoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.SUBCATEGORY_ID_NOT_FOUND));
-        subcategoryRepository.removeById(subcategory.getId());
+       if(!subcategory.getProducts().isEmpty())
+           throw new DeleteException(DeleteMessageUtils.DELETE_SUBCATEGORY_FAILED);
+       subcategoryRepository.removeById(subcategory.getId());
     }
 
     private String generateCode(String categoryCode) {

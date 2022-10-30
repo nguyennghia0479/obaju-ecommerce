@@ -5,6 +5,8 @@ import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.UploadImageDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.mapper.ImageMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.model.Image;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.repository.ImageRepository;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.repository.ProductRepository;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestController;
@@ -28,10 +30,12 @@ import java.util.stream.Stream;
 @Transactional
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
+    private final ProductRepository productRepository;
     private final Path root;
 
-    public ImageServiceImpl(ImageRepository imageRepository, FileConfig fileConfig) {
+    public ImageServiceImpl(ImageRepository imageRepository, ProductRepository productRepository, FileConfig fileConfig) {
         this.imageRepository = imageRepository;
+        this.productRepository = productRepository;
         this.root = Paths.get(fileConfig.getUploadDir());
         try {
             if(!Files.exists(root))
@@ -55,7 +59,7 @@ public class ImageServiceImpl implements ImageService {
         List<Image> images = new ArrayList<>();
         try {
             Stream.of(uploadImageDTO.getFiles()).forEach(file ->
-                images.add(saveImage(file)));
+                images.add(saveImage(file, uploadImageDTO.getProductId())));
             return images.stream()
                     .map(ImageMapper.INSTANCE::imageToImageDTO)
                     .toList();
@@ -72,17 +76,19 @@ public class ImageServiceImpl implements ImageService {
         imageRepository.delete(image);
     }
 
-    private Image saveImage(MultipartFile file) {
+    private Image saveImage(MultipartFile file, UUID productId) {
         try {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_NAME_NOT_FOUND));
+
             String uploadedFileName = file.getOriginalFilename();
             Path destinationFile = root.resolve(Paths.get(Objects.requireNonNull(uploadedFileName))).normalize().toAbsolutePath();
-
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
             String imageURL = MvcUriComponentsBuilder
                     .fromMethodName(FileRestController.class, "downloadFile", uploadedFileName)
                     .build()
                     .toString();
-            Image image = new Image(uploadedFileName, imageURL);
+            Image image = new Image(uploadedFileName, imageURL, product);
             return imageRepository.save(image);
         } catch (IOException e) {
             throw new ResourceNotFoundException(FileExceptionMessageUtils.UPLOAD_IMAGE_ERROR + " " + e.getMessage());
