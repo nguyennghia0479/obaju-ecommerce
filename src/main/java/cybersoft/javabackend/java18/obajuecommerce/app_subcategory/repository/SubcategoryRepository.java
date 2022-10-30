@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,4 +25,7 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
             and c.code = ?1
             """)
     int countSubcategoryByCategoryCode(String categoryCode);
+
+    @Query("select sc from Subcategory sc left join fetch sc.products")
+    List<Subcategory> getAll();
 }

@@ -1,5 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_image.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -7,10 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
@@ -26,6 +28,12 @@ public class Image extends BaseEntity {
 
     @Column(name = ColumnEntity.Image.IMAGE_URL, nullable = false)
     private String imageURL;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = ColumnEntity.Image.PRODUCT_ID, nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Product product;
 
     @Override
     public boolean equals(Object obj) {

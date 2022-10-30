@@ -5,7 +5,9 @@ import cybersoft.javabackend.java18.obajuecommerce.app_category.dto.CategoryDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.mapper.CategoryMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.repository.CategoryRepository;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(UUID id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.CATEGORY_ID_NOT_FOUND));
+        if(!category.getSubcategories().isEmpty())
+            throw new DeleteException(DeleteMessageUtils.DELETE_CATEGORY_FAILED);
         categoryRepository.removeById(category.getId());
     }
 }

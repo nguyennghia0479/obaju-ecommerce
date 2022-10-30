@@ -2,16 +2,22 @@ package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,6 +45,9 @@ public class Subcategory extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Category category;
+
+    @OneToMany(mappedBy = ColumnEntity.Subcategory.SUBCATEGORY_MAP)
+    private Set<Product> products = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object obj) {

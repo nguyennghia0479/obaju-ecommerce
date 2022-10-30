@@ -10,10 +10,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -36,7 +33,7 @@ public class Category extends BaseEntity {
     @Column(name = ColumnEntity.Category.DELETED)
     private boolean deleted = Boolean.FALSE;
 
-    @OneToMany(mappedBy = ColumnEntity.Category.CATEGORY_MAP)
+    @OneToMany(mappedBy = ColumnEntity.Category.CATEGORY_MAP, fetch = FetchType.LAZY)
     Set<Subcategory> subcategories = new LinkedHashSet<>();
 
     @Override
