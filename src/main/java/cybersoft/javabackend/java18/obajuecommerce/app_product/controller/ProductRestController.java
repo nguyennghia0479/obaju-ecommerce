@@ -61,4 +61,11 @@ public class ProductRestController {
         productService.deleteById(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_PRODUCT_SUCCESS, HttpStatus.OK);
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/admin/products/{id}/images")
+    public ResponseEntity<ResponseDTO> deleteImagesById(@PathVariable("id") UUID id) {
+        productService.deleteImagesById(id);
+        return ResponseUtils.get(DeleteMessageUtils.DELETE_PRODUCT_IMAGES_SUCCESS, HttpStatus.OK);
+    }
 }

@@ -14,4 +14,6 @@ public class DeleteMessageUtils {
     public static final String DELETE_SUBCATEGORY_FAILED = "Delete subcategory failed because a foreign key constraint";
     public static final String DELETE_IMAGE_SUCCESS = "Delete image successfully";
     public static final String DELETE_PRODUCT_SUCCESS = "Delete product successfully";
+    public static final String DELETE_PRODUCT_IMAGES_SUCCESS = "Delete product images successfully";
+    public static final String DELETE_PRODUCT_SIZE_SUCCESS = "Delete product size successfully";
 }

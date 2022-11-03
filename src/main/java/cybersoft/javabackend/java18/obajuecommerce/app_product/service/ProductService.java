@@ -20,4 +20,6 @@ public interface ProductService {
     ProductDTO update(ProductUpdateDTO productUpdateDTO);
 
     void deleteById(UUID id);
+
+    void deleteImagesById(UUID id);
 }
