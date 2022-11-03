@@ -117,6 +117,13 @@ public class ProductServiceImpl implements ProductService {
         productRepository.removeById(product.getId());
     }
 
+    @Override
+    public void deleteImagesById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
+        product.getImages().forEach(image -> imageService.deleteById(image.getId()));
+    }
+
     private String convertProductName(String name) {
         return name.toLowerCase().replace(" ", "-");
     }

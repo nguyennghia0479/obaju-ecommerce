@@ -106,4 +106,20 @@ public class ColumnEntity {
         public static final String SUBCATEGORY_ID = "OE_P_SUBCATEGORY_ID";
         public static final String PRODUCT_MAP = "product";
     }
+
+    @UtilityClass
+    public static class ProductSize {
+        public static final String TABLE_NAME = "OE_PRODUCT_SIZE";
+        public static final String SIZE = "OE_PS_SIZE";
+        public static final String SIZE_TYPE = "OE_PS_SIZE_TYPE";
+        public static final String PRODUCT_SIZE_MAP = "productSize";
+    }
+
+    @UtilityClass
+    public static class Stock {
+        public static final String TABLE_NAME = "OE_STOCK";
+        public static final String PRODUCT_ID = "OE_S_PRODUCT_ID";
+        public static final String PRODUCT_SIZE_ID = "OS_S_PRODUCT_SIZE_ID";
+        public static final String QUANTITY = "OS_S_QUANTITY";
+    }
 }
