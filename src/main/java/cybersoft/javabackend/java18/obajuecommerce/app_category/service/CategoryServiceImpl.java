@@ -2,6 +2,7 @@ package cybersoft.javabackend.java18.obajuecommerce.app_category.service;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_category.dto.CategoryCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.dto.CategoryDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_category.dto.CategoryIncludeSubcategoryDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.mapper.CategoryMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
 import cybersoft.javabackend.java18.obajuecommerce.app_category.repository.CategoryRepository;
@@ -26,10 +27,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDTO> findAll() {
-        return categoryRepository.getAll()
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryMapper.INSTANCE::categoryToCategoryDTO)
+                .toList();
+    }
+
+    @Override
+    public List<CategoryIncludeSubcategoryDTO> findAllSubcategoryDTO() {
+        return categoryRepository.findAllIncludeSubcategories()
                 .stream()
                 .distinct()
-                .map(CategoryMapper.INSTANCE::categoryToCategoryDTO)
+                .map(CategoryMapper.INSTANCE::categoryToCategoryIncludeSubcategoryDTO)
                 .toList();
     }
 
@@ -41,10 +50,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryCreateDTO save(CategoryCreateDTO categoryCreateDTO) {
+    public CategoryDTO save(CategoryCreateDTO categoryCreateDTO) {
         Category categoryCreate = CategoryMapper.INSTANCE.categoryCreateDTOToCategory(categoryCreateDTO);
         categoryRepository.save(categoryCreate);
-        return CategoryMapper.INSTANCE.categoryToCategoryCreateDTO(categoryCreate);
+        return CategoryMapper.INSTANCE.categoryToCategoryDTO(categoryCreate);
     }
 
     @Override

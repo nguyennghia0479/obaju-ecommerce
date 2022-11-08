@@ -1,10 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_product.service;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_image.service.ImageService;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductCreateDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductIncludeImageDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductUpdateDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.*;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.mapper.ProductMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.repository.ProductRepository;
@@ -14,10 +11,12 @@ import cybersoft.javabackend.java18.obajuecommerce.common.exception.DuplicateExc
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestController;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.ConvertUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,13 +39,14 @@ public class ProductServiceImpl implements ProductService {
     private final ImageService imageService;
     private final Path root;
 
-    public ProductServiceImpl(ProductRepository productRepository, SubcategoryRepository subcategoryRepository, ImageService imageService, FileConfig fileConfig) {
+    public ProductServiceImpl(ProductRepository productRepository, SubcategoryRepository subcategoryRepository,
+                              ImageService imageService, FileConfig fileConfig) {
         this.productRepository = productRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.imageService = imageService;
         this.root = Paths.get(fileConfig.getUploadDir());
         try {
-            if(!Files.exists(root))
+            if (!Files.exists(root))
                 Files.createDirectory(root);
         } catch (IOException e) {
             throw new FileException(FileExceptionMessageUtils.ERROR_CREATE_ROOT_FOLDER + " " + e.getMessage());
@@ -62,9 +62,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findById(UUID id) {
-        return productRepository.findById(id)
+    public List<ProductIncludeSubcategoryDTO> findAllIncludeSubcategoryDTO() {
+        Sort sort = Sort.by("lastModifiedAt").descending();
+        return productRepository.findAll(sort)
+                .stream()
+                .map(ProductMapper.INSTANCE::productToProductIncludeSubcategoryDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductDTO> findAllBySubcategoryId(UUID id) {
+        return productRepository.findAllBySubcategoryId(id)
+                .stream()
                 .map(ProductMapper.INSTANCE::productToProductDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductDTO> findAllBySubcategoryName(String name) {
+        return productRepository.findAllBySubcategoryName(name)
+                .stream()
+                .map(ProductMapper.INSTANCE::productToProductDTO)
+                .toList();
+    }
+
+    @Override
+    public ProductIncludeSubcategoryDTO findById(UUID id) {
+        return productRepository.findById(id)
+                .map(ProductMapper.INSTANCE::productToProductIncludeSubcategoryDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
     }
 
@@ -80,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
         Subcategory subcategory = subcategoryRepository.findById(productCreateDTO.getSubcategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.SUBCATEGORY_ID_NOT_FOUND));
         Product productCreate = ProductMapper.INSTANCE.productCreateDTOToProduct(productCreateDTO);
-        productCreate.setName(convertProductName(productCreate.getName()));
+        productCreate.setNameURL(ConvertUtils.convertStringToURL(productCreate.getName()));
         productCreate.setCode(generateCode(subcategory.getCode()));
         productCreate.setAvatarURL(uploadAvatar(productCreateDTO.getFile()));
         productCreate.setSubcategory(subcategory);
@@ -95,15 +120,15 @@ public class ProductServiceImpl implements ProductService {
         Product productUpdate = productRepository.findById(productUpdateDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException((ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND)));
         checkProductNameIsUnique(productUpdateDTO, productUpdate.getName());
-        if(!productUpdate.getSubcategory().getId().equals(subcategory.getId())) {
+        if (!productUpdate.getSubcategory().getId().equals(subcategory.getId())) {
             productUpdate.setCode(generateCode(subcategory.getCode()));
             productUpdate.setSubcategory(subcategory);
         }
-        if(productUpdateDTO.getFile() != null) {
+        if (productUpdateDTO.getFile() != null) {
             deleteFileFromSystem(productUpdate.getAvatarURL());
             productUpdate.setAvatarURL(uploadAvatar(productUpdateDTO.getFile()));
         }
-        productUpdate.setName(convertProductName(productUpdateDTO.getName()));
+        productUpdate.setNameURL(ConvertUtils.convertStringToURL(productUpdate.getName()));
         productUpdate.setPrice(productUpdateDTO.getPrice());
         productUpdate.setColor(productUpdateDTO.getColor());
         return ProductMapper.INSTANCE.productToProductDTO(productUpdate);
@@ -124,14 +149,15 @@ public class ProductServiceImpl implements ProductService {
         product.getImages().forEach(image -> imageService.deleteById(image.getId()));
     }
 
-    private String convertProductName(String name) {
-        return name.toLowerCase().replace(" ", "-");
+    @Override
+    public Product.Color[] findAllColor() {
+        return Product.Color.values();
     }
 
     private void checkProductNameIsUnique(ProductUpdateDTO productUpdateDTO, String name) {
-        if(productRepository.getByName(productUpdateDTO.getName()).isPresent()
+        if (productRepository.getByName(productUpdateDTO.getName()).isPresent()
                 && !productUpdateDTO.getName().equals(name))
-           throw new DuplicateException("Product name is existed");
+            throw new DuplicateException("Product name is existed");
     }
 
     private String generateCode(String subcategoryCode) {

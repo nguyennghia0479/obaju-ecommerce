@@ -28,6 +28,11 @@ public class CategoryRestController {
         return ResponseUtils.get(categoryService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/categories/include-subcategories")
+    public ResponseEntity<ResponseDTO> findCategoriesIncludeSubcategories() {
+        return ResponseUtils.get(categoryService.findAllSubcategoryDTO(), HttpStatus.OK);
+    }
+
     @GetMapping("/categories/{id}")
     public ResponseEntity<ResponseDTO> findCategoryById(@PathVariable("id") UUID id) {
         return ResponseUtils.get(categoryService.findById(id), HttpStatus.OK);

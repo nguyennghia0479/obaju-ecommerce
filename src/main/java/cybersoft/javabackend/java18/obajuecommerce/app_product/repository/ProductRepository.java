@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
-    @Query("select p from Product p left join fetch p.images where p.name = ?1")
+    @Query("select p from Product p left join fetch p.images where p.nameURL = ?1")
     Optional<Product> getByName(String name);
 
     @Modifying
@@ -25,4 +26,14 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             and sc.code = ?1
             """)
     int countProductBySubcategory(String subcategoryCode);
+
+    List<Product> findAllBySubcategoryId(UUID id);
+
+    @Query("""
+            select p
+            from Product p, Subcategory sc
+            where p.subcategory.id = sc.id
+            and sc.nameURL = ?1
+            """)
+    List<Product> findAllBySubcategoryName(String name);
 }
