@@ -1,9 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_product.service;
 
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductCreateDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductIncludeImageDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductUpdateDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.*;
+import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +9,12 @@ import java.util.UUID;
 public interface ProductService {
     List<ProductDTO> findAll();
 
-    ProductDTO findById(UUID id);
+    List<ProductDTO> findAllBySubcategoryId(UUID id);
+    List<ProductDTO> findAllBySubcategoryName(String name);
+
+    List<ProductIncludeSubcategoryDTO> findAllIncludeSubcategoryDTO();
+
+    ProductIncludeSubcategoryDTO findById(UUID id);
 
     ProductIncludeImageDTO findByName(String name);
 
@@ -22,4 +25,6 @@ public interface ProductService {
     void deleteById(UUID id);
 
     void deleteImagesById(UUID id);
+
+    Product.Color[] findAllColor();
 }

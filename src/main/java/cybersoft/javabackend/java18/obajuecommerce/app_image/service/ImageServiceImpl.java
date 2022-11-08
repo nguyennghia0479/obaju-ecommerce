@@ -1,6 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_image.service;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.ImageDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.ImageIncludeProductDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.UploadImageDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.mapper.ImageMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.model.Image;
@@ -13,6 +14,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestControll
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,16 +48,15 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<ImageDTO> findAll() {
+    public List<ImageIncludeProductDTO> findAll() {
         return imageRepository.findAll()
                 .stream()
-                .map(ImageMapper.INSTANCE::imageToImageDTO)
+                .map(ImageMapper.INSTANCE::imageToImageIncludeProductDTO)
                 .toList();
     }
 
     @Override
     public List<ImageDTO> uploadImage(UploadImageDTO uploadImageDTO) {
-        checkFileInfoIsUnique(uploadImageDTO.getFiles());
         List<Image> images = new ArrayList<>();
         try {
             Stream.of(uploadImageDTO.getFiles()).forEach(file ->
@@ -80,8 +81,8 @@ public class ImageServiceImpl implements ImageService {
         try {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_NAME_NOT_FOUND));
-
-            String uploadedFileName = file.getOriginalFilename();
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            String uploadedFileName = UUID.randomUUID().toString() + "." + extension;
             Path destinationFile = root.resolve(Paths.get(Objects.requireNonNull(uploadedFileName))).normalize().toAbsolutePath();
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
             String imageURL = MvcUriComponentsBuilder
@@ -91,17 +92,8 @@ public class ImageServiceImpl implements ImageService {
             Image image = new Image(uploadedFileName, imageURL, product);
             return imageRepository.save(image);
         } catch (IOException e) {
-            throw new ResourceNotFoundException(FileExceptionMessageUtils.UPLOAD_IMAGE_ERROR + " " + e.getMessage());
+            throw new FileException(FileExceptionMessageUtils.UPLOAD_IMAGE_ERROR + " " + e.getMessage());
         }
-    }
-
-    private void checkFileInfoIsUnique(MultipartFile[] files) {
-        Arrays.stream(files).forEach(file -> {
-            if(file.isEmpty())
-                throw new ResourceNotFoundException("Not found");
-            if (imageRepository.findByName(file.getOriginalFilename()).isPresent())
-                throw new FileException(FileExceptionMessageUtils.FILE_EXISTED);
-        });
     }
 
     private void deleteFileFromSystem(String fileName) {
@@ -109,7 +101,7 @@ public class ImageServiceImpl implements ImageService {
             Path path = root.resolve(Objects.requireNonNull(fileName));
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new ResourceNotFoundException(FileExceptionMessageUtils.DELETE_ERROR_FROM_ROOT + " " + e.getMessage());
+            throw new FileException(FileExceptionMessageUtils.DELETE_ERROR_FROM_ROOT + " " + e.getMessage());
         }
     }
 }

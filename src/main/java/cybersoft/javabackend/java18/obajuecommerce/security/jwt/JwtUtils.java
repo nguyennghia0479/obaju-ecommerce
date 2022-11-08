@@ -1,5 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.security.jwt;
 
+import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -24,10 +27,13 @@ public class JwtUtils {
     private final String PREFIX = "Bearer";
     private final Key SECRET_KEY = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-    public String generateJwt(String username) {
+    public String generateJwt(User user) {
         Date currentDate = new Date();
+        List<String> userGroups = new ArrayList<>();
+        user.getUserGroups().forEach(ug -> userGroups.add(ug.getName()));
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getUsername())
+                .claim("scope", userGroups)
                 .setIssuedAt(currentDate)
                 .setExpiration(new Date(currentDate.getTime() + 8640000))
                 .signWith(

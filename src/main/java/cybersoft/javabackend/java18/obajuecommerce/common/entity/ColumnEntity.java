@@ -79,6 +79,7 @@ public class ColumnEntity {
     public static class Subcategory {
         public static final String TABLE_NAME = "OE_SUBCATEGORY";
         public static final String NAME = "OE_SC_NAME";
+        public static final String NAME_URL = "OE_SC_NAME_URL";
         public static final String CODE = "OE_SC_CODE";
         public static final String DESCRIPTION = "OE_SC_DESCRIPTION";
         public static final String DELETED = "DELETED";
@@ -98,6 +99,7 @@ public class ColumnEntity {
     public static class Product {
         public static final String TABLE_NAME = "OE_PRODUCT";
         public static final String NAME = "OE_P_NAME";
+        public static final String NAME_URL = "OE_P_NAME_URL";
         public static final String CODE = "OE_P_CODE";
         public static final String AVATAR_URL = "OE_P_AVATAR_URL";
         public static final String PRICE = "OE_P_PRICE";

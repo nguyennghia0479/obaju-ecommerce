@@ -38,11 +38,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(LoginDTO dto) {
         User user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(
-                        () -> new UserNotFoundException(UserNotFoundMessageUtils.USERNAME_NOT_FOUND)
-                );
-        if(passwordEncoder.matches(dto.getPassword(),(user.getPassword())))
-            return jwtUtils.generateJwt(user.getUsername());
+                .orElseThrow(() -> new UserNotFoundException(UserNotFoundMessageUtils.USERNAME_NOT_FOUND));
+        if (passwordEncoder.matches(dto.getPassword(), (user.getPassword())))
+            return jwtUtils.generateJwt(user);
         throw new UserNotFoundException(UserNotFoundMessageUtils.PASSWORD_NOT_MATCH);
     }
 
@@ -53,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         newUser.setStatus(User.Status.ACTIVE);
         User userCreate = userRepository.save(newUser);
         addUserToUserGroup(userCreate);
-        return jwtUtils.generateJwt(userCreate.getUsername());
+        return jwtUtils.generateJwt(userCreate);
     }
 
     private void addUserToUserGroup(User user) {

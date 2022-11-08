@@ -25,9 +25,24 @@ public class ProductRestController {
         this.productService = productService;
     }
 
+    @GetMapping("/products/select-colors")
+    public ResponseEntity<ResponseDTO> getColors() {
+        return ResponseUtils.get(productService.findAllColor(), HttpStatus.OK);
+    }
+
     @GetMapping("/products")
     public ResponseEntity<ResponseDTO> findProducts() {
-        return ResponseUtils.get(productService.findAll(), HttpStatus.OK);
+        return ResponseUtils.get(productService.findAllIncludeSubcategoryDTO(), HttpStatus.OK);
+    }
+
+    @GetMapping("/select-product")
+    public ResponseEntity<ResponseDTO> getSelectProduct(@RequestParam("subcategoryId") UUID id) {
+        return ResponseUtils.get(productService.findAllBySubcategoryId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/products/subcategory/{subcategory-name}")
+    public ResponseEntity<ResponseDTO> findProductsBySubcategoryName(@PathVariable("subcategory-name") String name) {
+        return ResponseUtils.get(productService.findAllBySubcategoryName(name), HttpStatus.OK);
     }
 
     @GetMapping("/products/{id}")
@@ -35,7 +50,7 @@ public class ProductRestController {
         return ResponseUtils.get(productService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/products/get/{name}")
+    @GetMapping("/products/{name}")
     public ResponseEntity<ResponseDTO> findProductByName(@PathVariable("name") String name) {
         return ResponseUtils.get(productService.findByName(name), HttpStatus.OK);
     }
