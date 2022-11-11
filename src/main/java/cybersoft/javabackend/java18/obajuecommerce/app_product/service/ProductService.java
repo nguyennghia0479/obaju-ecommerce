@@ -24,7 +24,7 @@ public interface ProductService {
 
     void deleteById(UUID id);
 
-    void deleteImagesById(UUID id);
+    void deleteImagesByProductId(UUID id);
 
     Product.Color[] findAllColor();
 }

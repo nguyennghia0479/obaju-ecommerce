@@ -7,11 +7,13 @@ import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.repository.ProductRepository;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.repository.SubcategoryRepository;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.DuplicateException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestController;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ConvertUtils;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
@@ -138,12 +140,15 @@ public class ProductServiceImpl implements ProductService {
     public void deleteById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
+        if(!product.getStocks().isEmpty()) {
+            throw new DeleteException(DeleteMessageUtils.DELETE_PRODUCT_FAILED);
+        }
         product.getImages().forEach(image -> imageService.deleteById(image.getId()));
         productRepository.removeById(product.getId());
     }
 
     @Override
-    public void deleteImagesById(UUID id) {
+    public void deleteImagesByProductId(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
         product.getImages().forEach(image -> imageService.deleteById(image.getId()));

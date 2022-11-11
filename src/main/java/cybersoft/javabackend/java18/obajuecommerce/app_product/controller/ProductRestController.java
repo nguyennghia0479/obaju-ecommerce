@@ -36,8 +36,10 @@ public class ProductRestController {
     }
 
     @GetMapping("/select-product")
-    public ResponseEntity<ResponseDTO> getSelectProduct(@RequestParam("subcategoryId") UUID id) {
-        return ResponseUtils.get(productService.findAllBySubcategoryId(id), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> getSelectProduct(@RequestParam(value = "subcategoryId", required = false) UUID id) {
+        if(id != null)
+            return ResponseUtils.get(productService.findAllBySubcategoryId(id), HttpStatus.OK);
+        return ResponseUtils.get(null, HttpStatus.OK);
     }
 
     @GetMapping("/products/subcategory/{subcategory-name}")
@@ -79,8 +81,8 @@ public class ProductRestController {
 
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/admin/products/{id}/images")
-    public ResponseEntity<ResponseDTO> deleteImagesById(@PathVariable("id") UUID id) {
-        productService.deleteImagesById(id);
+    public ResponseEntity<ResponseDTO> deleteImagesByProductId(@PathVariable("id") UUID id) {
+        productService.deleteImagesByProductId(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_PRODUCT_IMAGES_SUCCESS, HttpStatus.OK);
     }
 }

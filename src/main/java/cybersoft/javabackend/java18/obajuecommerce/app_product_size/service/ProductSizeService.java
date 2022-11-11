@@ -12,6 +12,8 @@ public interface ProductSizeService {
 
     List<ProductSizeDTO> findBySizeType(ProductSize.SizeType sizeType);
 
+    ProductSize.SizeType[] findAllSizeType();
+
     ProductSizeDTO save(ProductSizeCreateDTO productSizeCreateDTO);
 
     void deleteById(UUID id);
