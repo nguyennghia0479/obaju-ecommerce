@@ -5,7 +5,9 @@ import cybersoft.javabackend.java18.obajuecommerce.app_product_size.dto.ProductS
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.mapper.ProductSizeMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.model.ProductSize;
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.repository.ProductSizeRepository;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,11 @@ public class ProductSizeServiceImpl implements ProductSizeService {
     }
 
     @Override
+    public ProductSize.SizeType[] findAllSizeType() {
+        return ProductSize.SizeType.values();
+    }
+
+    @Override
     public ProductSizeDTO save(ProductSizeCreateDTO productSizeCreateDTO) {
         ProductSize productSizeCreate = ProductSizeMapper.INSTANCE.productSizeCreateDTOToProductSize(productSizeCreateDTO);
         productSizeRepository.save(productSizeCreate);
@@ -49,6 +56,8 @@ public class ProductSizeServiceImpl implements ProductSizeService {
     public void deleteById(UUID id) {
         ProductSize productSize = productSizeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_SIZE_ID_NOT_FOUND));
+        if(!productSize.getStocks().isEmpty())
+            throw new DeleteException(DeleteMessageUtils.DELETE_PRODUCT_SIZE_FAILED);
         productSizeRepository.delete(productSize);
     }
 }

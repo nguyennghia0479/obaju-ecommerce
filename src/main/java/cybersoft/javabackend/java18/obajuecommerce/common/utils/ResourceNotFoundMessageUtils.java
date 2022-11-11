@@ -15,4 +15,5 @@ public class ResourceNotFoundMessageUtils {
     public static final String PRODUCT_ID_NOT_FOUND = "Product id is not existed";
     public static final String PRODUCT_NAME_NOT_FOUND = "Product name is not existed";
     public static final String PRODUCT_SIZE_ID_NOT_FOUND = "Product size id is not existed";
+    public static final String STOCK_ID_NOT_FOUND = "Stock id is not existed";
 }

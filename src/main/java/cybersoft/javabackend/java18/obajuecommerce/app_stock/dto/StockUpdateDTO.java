@@ -12,12 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StockCreateDTO implements Serializable {
-    @NotNull(message = "{stock.productId.null}")
-    private UUID productId;
-
-    @NotNull(message = "{stock.productSizeId.null}")
-    private UUID productSizeId;
+public class StockUpdateDTO implements Serializable {
+    private UUID id;
 
     @Min(value = 0, message = "{stock.quantity.min}")
     @NotNull(message = "{stock.quantity.null}")

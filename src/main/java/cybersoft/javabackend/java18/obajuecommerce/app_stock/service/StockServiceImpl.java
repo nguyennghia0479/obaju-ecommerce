@@ -6,6 +6,7 @@ import cybersoft.javabackend.java18.obajuecommerce.app_product_size.model.Produc
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.repository.ProductSizeRepository;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.dto.StockCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.dto.StockDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_stock.dto.StockUpdateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.mapper.StockMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.model.Stock;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.repository.StockRepository;
@@ -40,11 +41,20 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public StockDTO findById(UUID id) {
+        return stockRepository.findById(id)
+                .map(StockMapper.INSTANCE::stockToStockDTO)
+                .orElseThrow(() ->new ResourceNotFoundException(ResourceNotFoundMessageUtils.STOCK_ID_NOT_FOUND));
+    }
+
+    @Override
     public StockDTO save(StockCreateDTO stockCreateDTO) {
         Optional<Stock> stockUpdate = stockRepository
                 .findByProductIdAndProductSizeId(stockCreateDTO.getProductId(), stockCreateDTO.getProductSizeId());
-        if(stockUpdate.isPresent())
-            return update(stockUpdate.get(), stockCreateDTO.getQuantity());
+        if(stockUpdate.isPresent()) {
+            stockUpdate.get().setQuantity(stockCreateDTO.getQuantity());
+            return StockMapper.INSTANCE.stockToStockDTO(stockUpdate.get());
+        }
 
         Product product = productRepository.findById(stockCreateDTO.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
@@ -56,15 +66,18 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public StockDTO update(StockUpdateDTO stockUpdateDTO) {
+        Stock stockUpdate = stockRepository.findById(stockUpdateDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.STOCK_ID_NOT_FOUND));
+        stockUpdate.setQuantity(stockUpdateDTO.getQuantity());
+        return StockMapper.INSTANCE.stockToStockDTO(stockUpdate);
+    }
+
+    @Override
     public void deleteById(UUID id) {
         Stock stock = stockRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(""));
         stockRepository.delete(stock);
-    }
-
-    private StockDTO update(Stock stockUpdate, int quantity) {
-        stockUpdate.setQuantity(quantity);
-        return StockMapper.INSTANCE.stockToStockDTO(stockUpdate);
     }
 }
 
