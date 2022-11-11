@@ -31,6 +31,9 @@ public class Subcategory extends BaseEntity {
     @Column(name = ColumnEntity.Subcategory.NAME, nullable = false, length = 20)
     private String name;
 
+    @Column(name = ColumnEntity.Subcategory.NAME_URL, nullable = false, length = 20)
+    private String nameURL;
+
     @Column(name = ColumnEntity.Subcategory.CODE, nullable = false, length = 20)
     private String code;
 

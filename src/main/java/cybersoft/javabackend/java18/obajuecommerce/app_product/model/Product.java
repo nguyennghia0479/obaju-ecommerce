@@ -32,6 +32,9 @@ public class Product extends BaseEntity {
     @Column(name = ColumnEntity.Product.NAME, nullable = false, length = 100)
     private String name;
 
+    @Column(name = ColumnEntity.Product.NAME_URL, nullable = false, length = 100)
+    private String nameURL;
+
     @Column(name = ColumnEntity.Product.CODE, nullable = false, length = 30)
     private String code;
 

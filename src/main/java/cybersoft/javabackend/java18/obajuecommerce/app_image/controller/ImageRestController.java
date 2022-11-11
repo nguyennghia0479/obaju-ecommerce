@@ -3,6 +3,7 @@ package cybersoft.javabackend.java18.obajuecommerce.app_image.controller;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.ImageDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.dto.UploadImageDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.service.ImageService;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
@@ -33,19 +34,19 @@ public class ImageRestController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping(value = "/admin/upload-images", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/admin/images", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseDTO> uploadImages(@ModelAttribute @Valid UploadImageDTO uploadImageDTO, BindingResult result) {
         if(result.hasErrors())
-            return ResponseUtils.get(FileExceptionMessageUtils.IMAGE_NOT_FOUND, HttpStatus.BAD_REQUEST);
+            return ResponseUtils.error(result, HttpStatus.BAD_REQUEST);
         List<ImageDTO> images = imageService.uploadImage(uploadImageDTO);
         if(!images.isEmpty()) {
             return ResponseUtils.get(images, HttpStatus.CREATED);
         }
-        return ResponseUtils.get(FileExceptionMessageUtils.UPLOAD_IMAGE_ERROR, HttpStatus.BAD_REQUEST);
+        throw new FileException(FileExceptionMessageUtils.UPLOAD_IMAGE_ERROR);
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @DeleteMapping("/admin/files/{id}")
+    @DeleteMapping("/admin/images/{id}")
     public ResponseEntity<ResponseDTO> deleteFile(@PathVariable("id") UUID id) {
         imageService.deleteById(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_IMAGE_SUCCESS, HttpStatus.OK);

@@ -26,6 +26,8 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> 
             """)
     int countSubcategoryByCategoryCode(String categoryCode);
 
-    @Query("select sc from Subcategory sc left join fetch sc.products")
-    List<Subcategory> getAll();
+    @Query("select distinct sc from Subcategory sc left join fetch sc.products")
+    List<Subcategory> findAllIncludeProducts();
+
+    Optional<Subcategory> findByNameURL(String nameURL);
 }
