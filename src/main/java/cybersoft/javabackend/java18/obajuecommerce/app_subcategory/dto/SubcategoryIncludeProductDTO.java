@@ -1,6 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import lombok.*;
 
 import java.io.Serializable;
@@ -17,5 +18,6 @@ public class SubcategoryIncludeProductDTO implements Serializable {
     private String name;
     private String code;
     private String description;
+    private Subcategory.Category category;
     private Set<ProductDTO> products;
 }

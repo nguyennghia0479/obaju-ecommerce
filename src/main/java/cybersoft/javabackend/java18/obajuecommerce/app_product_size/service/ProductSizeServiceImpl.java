@@ -9,6 +9,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteExcept
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,23 +27,19 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 
     @Override
     public List<ProductSizeDTO> findAll() {
-        return productSizeRepository.findAll()
+        Sort sort = Sort.by("lastModifiedAt").descending();
+        return productSizeRepository.findAll(sort)
                 .stream()
                 .map(ProductSizeMapper.INSTANCE::productSizeToProductSizeDTO)
                 .toList();
     }
 
     @Override
-    public List<ProductSizeDTO> findBySizeType(ProductSize.SizeType sizeType) {
-        return productSizeRepository.findBySizeType(sizeType)
+    public List<ProductSizeDTO> findByProductId(UUID id) {
+        return productSizeRepository.findByProductId(id)
                 .stream()
                 .map(ProductSizeMapper.INSTANCE::productSizeToProductSizeDTO)
                 .toList();
-    }
-
-    @Override
-    public ProductSize.SizeType[] findAllSizeType() {
-        return ProductSize.SizeType.values();
     }
 
     @Override

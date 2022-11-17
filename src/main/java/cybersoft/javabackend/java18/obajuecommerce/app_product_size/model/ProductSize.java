@@ -28,18 +28,8 @@ public class ProductSize extends BaseEntity {
     @Column(name = ColumnEntity.ProductSize.SIZE, nullable = false, length = 10)
     private String size;
 
-    @Column(name = ColumnEntity.ProductSize.SIZE_TYPE, nullable = false, length = 20)
-    private SizeType sizeType;
-
     @OneToMany(mappedBy = ColumnEntity.ProductSize.PRODUCT_SIZE_MAP)
     private Set<Stock> stocks = new LinkedHashSet<>();
-
-    public enum SizeType {
-        SHIRT,
-        PANTS,
-        SHOES,
-        ACCESSORIES
-    }
 
     @Override
     public boolean equals(Object obj) {

@@ -1,8 +1,9 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.service;
 
-import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
-import cybersoft.javabackend.java18.obajuecommerce.app_category.repository.CategoryRepository;
-import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.*;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryCreateDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryIncludeProductDTO;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryUpdateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.mapper.SubcategoryMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.repository.SubcategoryRepository;
@@ -22,11 +23,9 @@ import java.util.UUID;
 @Transactional
 public class SubcategoryServiceImpl implements SubcategoryService {
     private final SubcategoryRepository subcategoryRepository;
-    private final CategoryRepository categoryRepository;
 
-    public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository, CategoryRepository categoryRepository) {
+    public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository) {
         this.subcategoryRepository = subcategoryRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -38,17 +37,8 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     }
 
     @Override
-    public List<SubcategoryIncludeCategoryDTO> findAllIncludeCategoryDTO() {
-        Sort sort = Sort.by("lastModifiedAt").descending();
-        return subcategoryRepository.findAll(sort)
-                .stream()
-                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryIncludeCategoryDTO)
-                .toList();
-    }
-
-    @Override
     public List<SubcategoryDTO> findAll() {
-        Sort sort = Sort.by("lastModifiedAt").ascending();
+        Sort sort = Sort.by("lastModifiedAt").descending();
         return subcategoryRepository.findAll(sort)
                 .stream()
                 .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryDTO)
@@ -64,12 +54,8 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public SubcategoryDTO save(SubcategoryCreateDTO subcategoryCreateDTO) {
-        Category category = categoryRepository.findById(subcategoryCreateDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.CATEGORY_ID_NOT_FOUND));
         Subcategory subcategoryCreate = SubcategoryMapper.INSTANCE.subcategoryCreateDTOToSubcategory(subcategoryCreateDTO);
         subcategoryCreate.setNameURL(ConvertUtils.convertStringToURL(subcategoryCreate.getName()));
-        subcategoryCreate.setCode(generateCode(category.getCode()));
-        subcategoryCreate.setCategory(category);
         subcategoryRepository.save(subcategoryCreate);
         return SubcategoryMapper.INSTANCE.subcategoryToSubcategoryDTO(subcategoryCreate);
     }
@@ -91,9 +77,8 @@ public class SubcategoryServiceImpl implements SubcategoryService {
        subcategoryRepository.removeById(subcategory.getId());
     }
 
-    private String generateCode(String categoryCode) {
-        StringBuilder builder = new StringBuilder();
-        int size = subcategoryRepository.countSubcategoryByCategoryCode(categoryCode);
-        return builder.append(categoryCode).append(String.format("%02d", size + 1)).toString();
+    @Override
+    public Subcategory.Category[] findAllCategory() {
+        return Subcategory.Category.values();
     }
 }

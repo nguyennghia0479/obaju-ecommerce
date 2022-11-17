@@ -1,7 +1,6 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_product_size.controller;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.dto.ProductSizeCreateDTO;
-import cybersoft.javabackend.java18.obajuecommerce.app_product_size.model.ProductSize;
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.service.ProductSizeService;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
@@ -24,19 +23,14 @@ public class ProductSizeRestController {
         this.productSizeService = productSizeService;
     }
 
+    @GetMapping("product-sizes/select-size/{productId}")
+    public ResponseEntity<ResponseDTO> getSelectSizeByProductId(@PathVariable("productId") UUID id) {
+        return ResponseUtils.get(productSizeService.findByProductId(id), HttpStatus.OK);
+    }
+
     @GetMapping("product-sizes")
     public ResponseEntity<ResponseDTO> findAllProductSizes() {
         return ResponseUtils.get(productSizeService.findAll(), HttpStatus.OK);
-    }
-
-    @GetMapping("product-sizes/{size-type}")
-    public ResponseEntity<ResponseDTO> findAllProductSizesByType(@PathVariable("size-type") ProductSize.SizeType sizeType) {
-        return ResponseUtils.get(productSizeService.findBySizeType(sizeType), HttpStatus.OK);
-    }
-
-    @GetMapping("product-sizes/select-size-type")
-    public ResponseEntity<ResponseDTO> getSelectSizeType() {
-        return ResponseUtils.get(productSizeService.findAllSizeType(), HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "bearerAuth")

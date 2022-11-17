@@ -1,6 +1,5 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_product_size.dto;
 
-import cybersoft.javabackend.java18.obajuecommerce.app_product_size.model.ProductSize;
 import cybersoft.javabackend.java18.obajuecommerce.app_product_size.validation.annotation.UniqueProductSize;
 import lombok.*;
 
@@ -18,6 +17,4 @@ public class ProductSizeCreateDTO implements Serializable {
     @NotBlank(message = "{productSize.size.blank}")
     @UniqueProductSize
     private String size;
-
-    private ProductSize.SizeType sizeType;
 }

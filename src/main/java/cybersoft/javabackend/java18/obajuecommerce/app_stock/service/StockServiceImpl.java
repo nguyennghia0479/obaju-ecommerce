@@ -12,6 +12,7 @@ import cybersoft.javabackend.java18.obajuecommerce.app_stock.model.Stock;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.repository.StockRepository;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<StockDTO> findAll() {
-        return stockRepository.findAll()
+        Sort sort = Sort.by("lastModifiedAt").ascending();
+        return stockRepository.findAll(sort)
                 .stream()
                 .map(StockMapper.INSTANCE::stockToStockDTO)
                 .toList();
