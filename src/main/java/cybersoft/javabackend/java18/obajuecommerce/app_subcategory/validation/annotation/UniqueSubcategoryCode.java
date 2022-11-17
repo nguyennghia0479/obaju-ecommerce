@@ -1,6 +1,6 @@
-package cybersoft.javabackend.java18.obajuecommerce.app_category.validation.annotation;
+package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.validation.annotation;
 
-import cybersoft.javabackend.java18.obajuecommerce.app_category.validation.validator.UniqueCategoryCodeValidator;
+import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.validation.validator.UniqueSubcategoryCodeValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,11 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = UniqueCategoryCodeValidator.class)
+@Constraint(validatedBy = UniqueSubcategoryCodeValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface UniqueCategoryCode {
-    String message() default "{category.code.unique}";
+public @interface UniqueSubcategoryCode {
+    String message() default "{subcategory.code.unique}";
 
     Class<?>[] groups() default {};
 

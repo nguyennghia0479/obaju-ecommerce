@@ -24,14 +24,19 @@ public class SubcategoryController {
         this.subcategoryService = subcategoryService;
     }
 
-    @GetMapping("/subcategories/select")
+    @GetMapping("/subcategories/select-category")
+    public ResponseEntity<ResponseDTO> getSelectCategory() {
+        return ResponseUtils.get(subcategoryService.findAllCategory(), HttpStatus.OK);
+    }
+
+    @GetMapping("/subcategories/select-subcategory")
     public ResponseEntity<ResponseDTO> getSelectSubCategories() {
         return ResponseUtils.get(subcategoryService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/subcategories")
     public ResponseEntity<ResponseDTO> findSubcategories() {
-        return ResponseUtils.get(subcategoryService.findAllIncludeCategoryDTO(), HttpStatus.OK);
+        return ResponseUtils.get(subcategoryService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/subcategories/include-products")

@@ -67,23 +67,14 @@ public class ColumnEntity {
     }
 
     @UtilityClass
-    public static class Category {
-        public static final String TABLE_NAME = "OE_CATEGORY";
-        public static final String NAME = "OE_C_NAME";
-        public static final String CODE = "OE_C_CODE";
-        public static final String DELETED = "DELETED";
-        public static final String CATEGORY_MAP = "category";
-    }
-
-    @UtilityClass
     public static class Subcategory {
         public static final String TABLE_NAME = "OE_SUBCATEGORY";
         public static final String NAME = "OE_SC_NAME";
         public static final String NAME_URL = "OE_SC_NAME_URL";
         public static final String CODE = "OE_SC_CODE";
         public static final String DESCRIPTION = "OE_SC_DESCRIPTION";
+        public static final String CATEGORY = "OE_SC_CATEGORY";
         public static final String DELETED = "DELETED";
-        public static final String CATEGORY_ID = "OE_SC_CATEGORY_ID";
         public static final String SUBCATEGORY_MAP = "subcategory";
     }
 
@@ -113,7 +104,6 @@ public class ColumnEntity {
     public static class ProductSize {
         public static final String TABLE_NAME = "OE_PRODUCT_SIZE";
         public static final String SIZE = "OE_PS_SIZE";
-        public static final String SIZE_TYPE = "OE_PS_SIZE_TYPE";
         public static final String PRODUCT_SIZE_MAP = "productSize";
     }
 
@@ -121,7 +111,7 @@ public class ColumnEntity {
     public static class Stock {
         public static final String TABLE_NAME = "OE_STOCK";
         public static final String PRODUCT_ID = "OE_S_PRODUCT_ID";
-        public static final String PRODUCT_SIZE_ID = "OS_S_PRODUCT_SIZE_ID";
-        public static final String QUANTITY = "OS_S_QUANTITY";
+        public static final String PRODUCT_SIZE_ID = "OE_S_PRODUCT_SIZE_ID";
+        public static final String QUANTITY = "OE_S_QUANTITY";
     }
 }

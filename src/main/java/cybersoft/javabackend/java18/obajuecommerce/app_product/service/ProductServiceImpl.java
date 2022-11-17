@@ -56,14 +56,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductMapper.INSTANCE::productToProductDTO)
-                .toList();
-    }
-
-    @Override
     public List<ProductIncludeSubcategoryDTO> findAllIncludeSubcategoryDTO() {
         Sort sort = Sort.by("lastModifiedAt").descending();
         return productRepository.findAll(sort)
@@ -130,7 +122,8 @@ public class ProductServiceImpl implements ProductService {
             deleteFileFromSystem(productUpdate.getAvatarURL());
             productUpdate.setAvatarURL(uploadAvatar(productUpdateDTO.getFile()));
         }
-        productUpdate.setNameURL(ConvertUtils.convertStringToURL(productUpdate.getName()));
+        productUpdate.setName(productUpdateDTO.getName());
+        productUpdate.setNameURL(ConvertUtils.convertStringToURL(productUpdateDTO.getName()));
         productUpdate.setPrice(productUpdateDTO.getPrice());
         productUpdate.setColor(productUpdateDTO.getColor());
         return ProductMapper.INSTANCE.productToProductDTO(productUpdate);
@@ -170,14 +163,14 @@ public class ProductServiceImpl implements ProductService {
         int size = productRepository.countProductBySubcategory(subcategoryCode);
         return builder.append(subcategoryCode)
                 .append("#")
-                .append(String.format("%05d", size + 1))
+                .append(String.format("%03d", size + 1))
                 .toString();
     }
 
     private String uploadAvatar(MultipartFile file) {
         try {
             String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-            String uploadedFileName = UUID.randomUUID().toString() + "." + extension;
+            String uploadedFileName = UUID.randomUUID() + "." + extension;
             Path destinationFile = this.root.resolve(Paths.get(uploadedFileName)).normalize().toAbsolutePath();
 
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);

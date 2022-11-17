@@ -13,5 +13,11 @@ public interface ProductSizeRepository extends JpaRepository<ProductSize, UUID> 
     @Query("select (count(ps) > 0) from ProductSize ps where ps.size = ?1")
     boolean isExistedBySize(String size);
 
-    List<ProductSize> findBySizeType(ProductSize.SizeType sizeType);
+    @Query("""
+            select ps
+            from ProductSize ps, Stock s
+            where ps.id = s.productSize.id
+            and s.product.id = ?1
+            """)
+    List<ProductSize> findByProductId(UUID id);
 }

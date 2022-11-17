@@ -15,6 +15,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMes
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public List<ImageIncludeProductDTO> findAll() {
-        return imageRepository.findAll()
+        Sort sort = Sort.by("lastModifiedAt").descending();
+        return imageRepository.findAll(sort)
                 .stream()
                 .map(ImageMapper.INSTANCE::imageToImageIncludeProductDTO)
                 .toList();
@@ -82,7 +84,7 @@ public class ImageServiceImpl implements ImageService {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_NAME_NOT_FOUND));
             String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-            String uploadedFileName = UUID.randomUUID().toString() + "." + extension;
+            String uploadedFileName = UUID.randomUUID() + "." + extension;
             Path destinationFile = root.resolve(Paths.get(Objects.requireNonNull(uploadedFileName))).normalize().toAbsolutePath();
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
             String imageURL = MvcUriComponentsBuilder

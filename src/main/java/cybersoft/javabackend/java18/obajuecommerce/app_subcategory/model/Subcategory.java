@@ -1,7 +1,5 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
@@ -10,11 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,26 +30,30 @@ public class Subcategory extends BaseEntity {
     @Column(name = ColumnEntity.Subcategory.NAME, nullable = false, length = 20)
     private String name;
 
-    @Column(name = ColumnEntity.Subcategory.NAME_URL, nullable = false, length = 20)
+    @Column(name = ColumnEntity.Subcategory.NAME_URL, nullable = false, length = 10)
     private String nameURL;
 
     @Column(name = ColumnEntity.Subcategory.CODE, nullable = false, length = 20)
     private String code;
 
-    @Column(name = ColumnEntity.Subcategory.DESCRIPTION)
+    @Column(name = ColumnEntity.Subcategory.DESCRIPTION, length = 1000)
     private String description;
+
+    @Column(name = ColumnEntity.Subcategory.CATEGORY, nullable = false)
+    private Category category;
 
     @Column(name = ColumnEntity.Subcategory.DELETED)
     private boolean deleted = Boolean.FALSE;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = ColumnEntity.Subcategory.CATEGORY_ID, nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Category category;
-
     @OneToMany(mappedBy = ColumnEntity.Subcategory.SUBCATEGORY_MAP)
     private Set<Product> products = new LinkedHashSet<>();
+
+    public enum Category {
+        SHIRT,
+        PANTS,
+        SHOES,
+        ACCESSORY
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    List<ProductDTO> findAll();
-
     List<ProductDTO> findAllBySubcategoryId(UUID id);
     List<ProductDTO> findAllBySubcategoryName(String name);
 

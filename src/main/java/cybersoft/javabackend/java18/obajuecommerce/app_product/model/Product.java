@@ -68,8 +68,15 @@ public class Product extends BaseEntity {
         BLACK,
         RED,
         BLUE,
+        DARK_BLUE,
+        GREEN,
+        LIGHT_BROWN,
         BROWN,
-        GREY
+        LIGHT_GRAY,
+        GRAY,
+        DARK_GRAY,
+        BEIGE,
+        YELLOW
     }
 
     @Override
