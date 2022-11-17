@@ -14,18 +14,12 @@ import java.util.UUID;
 public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> {
     Optional<Subcategory> findByName(String name);
 
+    Optional<Subcategory> findByCode(String code);
+
     @Modifying
     @Query("update Subcategory sc set sc.deleted = true where sc.id = ?1")
     void removeById(UUID id);
 
-    @Query("""
-            select count(sc)
-            from Subcategory sc, Category c
-            where sc.category.id = c.id
-            and c.code = ?1
-            """)
-    int countSubcategoryByCategoryCode(String categoryCode);
-
-    @Query("select sc from Subcategory sc left join fetch sc.products")
-    List<Subcategory> getAll();
+    @Query("select distinct sc from Subcategory sc left join fetch sc.products")
+    List<Subcategory> findAllIncludeProducts();
 }

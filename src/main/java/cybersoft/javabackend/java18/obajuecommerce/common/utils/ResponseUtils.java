@@ -43,7 +43,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -55,7 +55,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -67,7 +67,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -79,7 +79,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -91,7 +91,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -103,7 +103,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -115,7 +115,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(result.getAllErrors().stream()
                                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                                 .toList())
@@ -129,7 +129,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())
@@ -141,7 +141,7 @@ public class ResponseUtils {
         return new ResponseEntity<>(
                 ResponseDTO.builder()
                         .content(null)
-                        .hasError(false)
+                        .hasError(true)
                         .errors(ExceptionUtils.getErrors(exception))
                         .timestamp(DateTimeUtils.now())
                         .statusCode(status.value())

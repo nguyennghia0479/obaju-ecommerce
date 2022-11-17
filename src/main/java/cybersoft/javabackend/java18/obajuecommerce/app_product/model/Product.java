@@ -2,6 +2,7 @@ package cybersoft.javabackend.java18.obajuecommerce.app_product.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cybersoft.javabackend.java18.obajuecommerce.app_image.model.Image;
+import cybersoft.javabackend.java18.obajuecommerce.app_stock.model.Stock;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcategory;
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
@@ -31,6 +32,9 @@ public class Product extends BaseEntity {
     @Column(name = ColumnEntity.Product.NAME, nullable = false, length = 100)
     private String name;
 
+    @Column(name = ColumnEntity.Product.NAME_URL, nullable = false, length = 100)
+    private String nameURL;
+
     @Column(name = ColumnEntity.Product.CODE, nullable = false, length = 30)
     private String code;
 
@@ -56,13 +60,23 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = ColumnEntity.Product.PRODUCT_MAP)
     private Set<Image> images = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = ColumnEntity.Product.PRODUCT_MAP)
+    private Set<Stock> stocks = new LinkedHashSet<>();
+
     public enum Color {
         WHITE,
         BLACK,
         RED,
         BLUE,
+        DARK_BLUE,
+        GREEN,
+        LIGHT_BROWN,
         BROWN,
-        GREY
+        LIGHT_GRAY,
+        GRAY,
+        DARK_GRAY,
+        BEIGE,
+        YELLOW
     }
 
     @Override

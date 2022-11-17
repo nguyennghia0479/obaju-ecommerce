@@ -1,7 +1,5 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_subcategory.service;
 
-import cybersoft.javabackend.java18.obajuecommerce.app_category.model.Category;
-import cybersoft.javabackend.java18.obajuecommerce.app_category.repository.CategoryRepository;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryCreateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.dto.SubcategoryIncludeProductDTO;
@@ -11,8 +9,10 @@ import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.model.Subcate
 import cybersoft.javabackend.java18.obajuecommerce.app_subcategory.repository.SubcategoryRepository;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.DeleteException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.ConvertUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,19 +23,25 @@ import java.util.UUID;
 @Transactional
 public class SubcategoryServiceImpl implements SubcategoryService {
     private final SubcategoryRepository subcategoryRepository;
-    private final CategoryRepository categoryRepository;
 
-    public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository, CategoryRepository categoryRepository) {
+    public SubcategoryServiceImpl(SubcategoryRepository subcategoryRepository) {
         this.subcategoryRepository = subcategoryRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public List<SubcategoryIncludeProductDTO> findAll() {
-        return subcategoryRepository.getAll()
+    public List<SubcategoryIncludeProductDTO> findAllIncludeProductDTO() {
+        return subcategoryRepository.findAllIncludeProducts()
                 .stream()
-                .distinct()
                 .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryIncludeProductDTO)
+                .toList();
+    }
+
+    @Override
+    public List<SubcategoryDTO> findAll() {
+        Sort sort = Sort.by("lastModifiedAt").descending();
+        return subcategoryRepository.findAll(sort)
+                .stream()
+                .map(SubcategoryMapper.INSTANCE::subcategoryToSubcategoryDTO)
                 .toList();
     }
 
@@ -48,11 +54,8 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public SubcategoryDTO save(SubcategoryCreateDTO subcategoryCreateDTO) {
-        Category category = categoryRepository.findById(subcategoryCreateDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.CATEGORY_ID_NOT_FOUND));
         Subcategory subcategoryCreate = SubcategoryMapper.INSTANCE.subcategoryCreateDTOToSubcategory(subcategoryCreateDTO);
-        subcategoryCreate.setCode(generateCode(category.getCode()));
-        subcategoryCreate.setCategory(category);
+        subcategoryCreate.setNameURL(ConvertUtils.convertStringToURL(subcategoryCreate.getName()));
         subcategoryRepository.save(subcategoryCreate);
         return SubcategoryMapper.INSTANCE.subcategoryToSubcategoryDTO(subcategoryCreate);
     }
@@ -74,9 +77,8 @@ public class SubcategoryServiceImpl implements SubcategoryService {
        subcategoryRepository.removeById(subcategory.getId());
     }
 
-    private String generateCode(String categoryCode) {
-        StringBuilder builder = new StringBuilder();
-        int size = subcategoryRepository.countSubcategoryByCategoryCode(categoryCode);
-        return builder.append(categoryCode).append(String.format("%02d", size + 1)).toString();
+    @Override
+    public Subcategory.Category[] findAllCategory() {
+        return Subcategory.Category.values();
     }
 }

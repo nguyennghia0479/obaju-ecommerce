@@ -25,9 +25,26 @@ public class ProductRestController {
         this.productService = productService;
     }
 
+    @GetMapping("/products/select-color")
+    public ResponseEntity<ResponseDTO> getColors() {
+        return ResponseUtils.get(productService.findAllColor(), HttpStatus.OK);
+    }
+
     @GetMapping("/products")
     public ResponseEntity<ResponseDTO> findProducts() {
-        return ResponseUtils.get(productService.findAll(), HttpStatus.OK);
+        return ResponseUtils.get(productService.findAllIncludeSubcategoryDTO(), HttpStatus.OK);
+    }
+
+    @GetMapping("/subcategories/products/select-products")
+    public ResponseEntity<ResponseDTO> getProductBySubcategoryId(@RequestParam(value = "subcategoryId", required = false) UUID id) {
+        if(id != null)
+            return ResponseUtils.get(productService.findAllBySubcategoryId(id), HttpStatus.OK);
+        return ResponseUtils.get(null, HttpStatus.OK);
+    }
+
+    @GetMapping("/products/subcategory/{subcategory-name}")
+    public ResponseEntity<ResponseDTO> findProductsBySubcategoryName(@PathVariable("subcategory-name") String name) {
+        return ResponseUtils.get(productService.findAllBySubcategoryName(name), HttpStatus.OK);
     }
 
     @GetMapping("/products/{id}")
@@ -35,7 +52,7 @@ public class ProductRestController {
         return ResponseUtils.get(productService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/products/get/{name}")
+    @GetMapping("/products/detail/{name}")
     public ResponseEntity<ResponseDTO> findProductByName(@PathVariable("name") String name) {
         return ResponseUtils.get(productService.findByName(name), HttpStatus.OK);
     }
@@ -60,5 +77,12 @@ public class ProductRestController {
     public ResponseEntity<ResponseDTO> deleteProductById(@PathVariable("id") UUID id) {
         productService.deleteById(id);
         return ResponseUtils.get(DeleteMessageUtils.DELETE_PRODUCT_SUCCESS, HttpStatus.OK);
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping("/admin/products/{id}/images")
+    public ResponseEntity<ResponseDTO> deleteImagesByProductId(@PathVariable("id") UUID id) {
+        productService.deleteImagesByProductId(id);
+        return ResponseUtils.get(DeleteMessageUtils.DELETE_PRODUCT_IMAGES_SUCCESS, HttpStatus.OK);
     }
 }
