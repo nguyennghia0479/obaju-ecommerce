@@ -1,10 +1,10 @@
-package cybersoft.javabackend.java18.obajuecommerce.app_stock.model;
+package cybersoft.javabackend.java18.obajuecommerce.app_order.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
-import cybersoft.javabackend.java18.obajuecommerce.app_product_size.model.ProductSize;
+import cybersoft.javabackend.java18.obajuecommerce.app_orderItem.model.OrderItem;
 import cybersoft.javabackend.java18.obajuecommerce.common.entity.ColumnEntity;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.BaseEntity;
+import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -22,22 +24,30 @@ import java.util.Objects;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = ColumnEntity.Stock.TABLE_NAME)
-public class Stock extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = ColumnEntity.Stock.PRODUCT_ID, nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Product product;
+@Table(name = ColumnEntity.Order.TABLE_NAME)
+public class Order extends BaseEntity {
+    @Column(name = ColumnEntity.Order.TOTAL_PRICE, nullable = false)
+    private Double totalPrice;
+
+    @Column(name = ColumnEntity.Order.PAYMENT, nullable = false)
+    private Payment payment;
+
+    @OneToMany(mappedBy = ColumnEntity.Order.ORDER_MAP)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = ColumnEntity.Stock.PRODUCT_SIZE_ID, nullable = false)
+    @JoinColumn(name = ColumnEntity.Order.USER_ID, nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private ProductSize productSize;
+    private User user;
 
-    @Column(name = ColumnEntity.Stock.QUANTITY, nullable = false)
-    private int quantity;
+    public enum Payment {
+        CASH,
+        VISA,
+        MASTER_CARD,
+        PAYPAL,
+        ONLINE_BANKING
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -45,8 +55,8 @@ public class Stock extends BaseEntity {
             return true;
         if(obj == null || getClass() != obj.getClass())
             return false;
-        Stock stock = (Stock) obj;
-        return Objects.equals(id, stock.getId());
+        Order order = (Order) obj;
+        return Objects.equals(id, order.getId());
     }
 
     @Override
