@@ -113,5 +113,25 @@ public class ColumnEntity {
         public static final String PRODUCT_ID = "OE_S_PRODUCT_ID";
         public static final String PRODUCT_SIZE_ID = "OE_S_PRODUCT_SIZE_ID";
         public static final String QUANTITY = "OE_S_QUANTITY";
+        public static final String STOCK_MAP = "stock";
+    }
+
+    @UtilityClass
+    public static class Order {
+        public static final String TABLE_NAME = "OE_ORDER";
+        public static final String TOTAL_PRICE = "OE_O_TOTAL_PRICE";
+        public static final String PAYMENT = "OE_O_PAYMENT";
+        public static final String USER_ID = "OE_O_USER_ID";
+        public static final String ORDER_MAP = "order";
+    }
+
+    @UtilityClass
+    public static class OrderItem {
+        public static final String TABLE_NAME = "OE_ORDER_ITEM";
+        public static final String QUANTITY = "OE_OI_QUANTITY";
+        public static final String PRICE = "OE_OI_PRICE";
+        public static final String ORDER_ID = "OE_OI_ORDER_ID";
+        public static final String STOCK_ID = "OE_OI_STOCK_ID";
+
     }
 }
