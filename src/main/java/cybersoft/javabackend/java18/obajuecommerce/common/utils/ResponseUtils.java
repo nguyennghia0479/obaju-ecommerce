@@ -148,4 +148,16 @@ public class ResponseUtils {
                         .build(),
                 status);
     }
+
+    public ResponseEntity<ResponseDTO> error(QuantityException exception, HttpStatus status) {
+        return new ResponseEntity<>(
+                ResponseDTO.builder()
+                        .content(null)
+                        .hasError(true)
+                        .errors(ExceptionUtils.getErrors(exception))
+                        .timestamp(DateTimeUtils.now())
+                        .statusCode(status.value())
+                        .build(),
+                status);
+    }
 }

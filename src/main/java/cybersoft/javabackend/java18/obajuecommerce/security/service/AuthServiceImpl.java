@@ -1,10 +1,13 @@
 package cybersoft.javabackend.java18.obajuecommerce.security.service;
 
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.UserNotFoundException;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.UserNotFoundMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.security.dto.LoginDTO;
 import cybersoft.javabackend.java18.obajuecommerce.security.dto.RegisterDTO;
 import cybersoft.javabackend.java18.obajuecommerce.security.jwt.JwtUtils;
+import cybersoft.javabackend.java18.obajuecommerce.user.dto.UserDTO;
 import cybersoft.javabackend.java18.obajuecommerce.user.mapper.UserMapper;
 import cybersoft.javabackend.java18.obajuecommerce.user.model.User;
 import cybersoft.javabackend.java18.obajuecommerce.user.model.UserGroup;
@@ -52,6 +55,13 @@ public class AuthServiceImpl implements AuthService {
         User userCreate = userRepository.save(newUser);
         addUserToUserGroup(userCreate);
         return jwtUtils.generateJwt(userCreate);
+    }
+
+    @Override
+    public UserDTO findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserMapper.INSTANCE::userToUserDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.USERNAME_NOT_FOUND));
     }
 
     private void addUserToUserGroup(User user) {
