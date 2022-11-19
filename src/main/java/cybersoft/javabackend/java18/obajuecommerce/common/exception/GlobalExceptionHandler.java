@@ -67,4 +67,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handlerDuplicateException(DuplicateException exception) {
         return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(QuantityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDTO> handlerQuantityException(QuantityException exception) {
+        return ResponseUtils.error(exception, HttpStatus.BAD_REQUEST);
+    }
 }

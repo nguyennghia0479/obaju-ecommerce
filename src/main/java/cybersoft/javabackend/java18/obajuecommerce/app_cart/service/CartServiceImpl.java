@@ -4,6 +4,7 @@ import cybersoft.javabackend.java18.obajuecommerce.app_cart.dto.CartDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.dto.StockDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.mapper.StockMapper;
 import cybersoft.javabackend.java18.obajuecommerce.app_stock.repository.StockRepository;
+import cybersoft.javabackend.java18.obajuecommerce.common.exception.QuantityException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class CartServiceImpl implements CartService {
         StockDTO stock = stockRepository.findByProductIdAndProductSizeId(productId, sizeId)
                 .map(StockMapper.INSTANCE::stockToStockDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.STOCK_ID_NOT_FOUND));
+        if(stock.getQuantity() < quantity) {
+            throw new QuantityException("Has out of stock");
+        }
         CartDTO item;
         if(cartItems.containsKey(stock.getId())) {
             item = cartItems.get(stock.getId());
@@ -55,6 +59,9 @@ public class CartServiceImpl implements CartService {
         StockDTO stock = stockRepository.findById(stockId)
                 .map(StockMapper.INSTANCE::stockToStockDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.STOCK_ID_NOT_FOUND));
+        if(stock.getQuantity() < quantity) {
+            throw new QuantityException("Has out of stock");
+        }
         CartDTO item = cartItems.get(stock.getId());
         item.setQuantity(quantity);
         item.setStock(stock);
@@ -74,5 +81,14 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartDTO> findAll() {
         return new ArrayList<>(cartItems.values());
+    }
+
+    @Override
+    public Double getTotalPrice() {
+        double totalPrice = (double) 0;
+        for(CartDTO cartDTO : cartItems.values()) {
+            totalPrice += (cartDTO.getStock().getProduct().getPrice() * cartDTO.getQuantity());
+        }
+        return totalPrice;
     }
 }

@@ -30,4 +30,9 @@ public class AuthRestController {
     public ResponseEntity<ResponseDTO> register(@RequestBody @Valid RegisterDTO dto) {
         return ResponseUtils.get(authService.register(dto), HttpStatus.OK);
     }
+
+//    @PostMapping("/users/get")
+//    public ResponseEntity<ResponseDTO> findUserByUsername(@RequestParam("username") String username) {
+//        return ResponseUtils.get(authService.findByUsername(username), HttpStatus.OK);
+//    }
 }

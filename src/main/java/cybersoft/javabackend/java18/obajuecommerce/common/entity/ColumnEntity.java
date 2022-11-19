@@ -120,6 +120,7 @@ public class ColumnEntity {
     public static class Order {
         public static final String TABLE_NAME = "OE_ORDER";
         public static final String TOTAL_PRICE = "OE_O_TOTAL_PRICE";
+        public static final String ADDRESS = "OE_O_ADDRESS";
         public static final String PAYMENT = "OE_O_PAYMENT";
         public static final String USER_ID = "OE_O_USER_ID";
         public static final String ORDER_MAP = "order";
