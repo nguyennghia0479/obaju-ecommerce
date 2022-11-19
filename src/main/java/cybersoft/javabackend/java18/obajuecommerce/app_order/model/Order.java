@@ -29,7 +29,11 @@ public class Order extends BaseEntity {
     @Column(name = ColumnEntity.Order.TOTAL_PRICE, nullable = false)
     private Double totalPrice;
 
+    @Column(name = ColumnEntity.Order.ADDRESS, nullable = false)
+    private String address;
+
     @Column(name = ColumnEntity.Order.PAYMENT, nullable = false)
+    @Enumerated(EnumType.STRING)
     private Payment payment;
 
     @OneToMany(mappedBy = ColumnEntity.Order.ORDER_MAP)

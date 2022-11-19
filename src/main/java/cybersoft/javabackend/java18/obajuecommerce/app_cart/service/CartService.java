@@ -15,4 +15,6 @@ public interface CartService {
     void removeAll();
 
     List<CartDTO> findAll();
+
+    Double getTotalPrice();
 }
