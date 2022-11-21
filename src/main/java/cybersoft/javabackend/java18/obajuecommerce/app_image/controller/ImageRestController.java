@@ -7,7 +7,10 @@ import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileExceptio
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.OperationUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
+import cybersoft.javabackend.java18.obajuecommerce.role.model.Operation;
+import cybersoft.javabackend.java18.obajuecommerce.security.authorization.SecurityOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +31,14 @@ public class ImageRestController {
         this.imageService = imageService;
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/images")
     public ResponseEntity<ResponseDTO> findImages() {
         return ResponseUtils.get(imageService.findAll(), HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.CREATE_NEW, type = Operation.Type.SAVE_OR_UPDATE)
     @PostMapping(value = "/admin/images", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseDTO> uploadImages(@ModelAttribute @Valid UploadImageDTO uploadImageDTO, BindingResult result) {
         if(result.hasErrors())
@@ -46,6 +51,7 @@ public class ImageRestController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.DELETE_BY_ID, type = Operation.Type.REMOVE)
     @DeleteMapping("/admin/images/{id}")
     public ResponseEntity<ResponseDTO> deleteFile(@PathVariable("id") UUID id) {
         imageService.deleteById(id);

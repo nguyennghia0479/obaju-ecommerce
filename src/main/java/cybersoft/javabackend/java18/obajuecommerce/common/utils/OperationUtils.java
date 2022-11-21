@@ -9,4 +9,5 @@ public class OperationUtils {
     public static final String CREATE_NEW = "CREATE NEW";
     public static final String UPDATE = "UPDATE";
     public static final String DELETE_BY_ID = "DELETE BY ID";
+    public static final String PLACE_ORDER = "PLACE ORDER";
 }

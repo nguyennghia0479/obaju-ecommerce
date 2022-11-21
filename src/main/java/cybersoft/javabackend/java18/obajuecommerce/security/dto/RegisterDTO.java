@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -35,7 +36,7 @@ public class RegisterDTO implements Serializable {
     @NotBlank(message = "{user.fullName.blank}")
     private String fullName;
 
-    @Size(min = 10, max = 10, message = "{user.phoneNum.size}")
+    @Pattern(regexp="(^$|0\\d{9})", message = "{user.phoneNum.pattern}")
     @NotBlank(message = "{user.phoneNum.blank}")
     @UniquePhoneNum
     private String phoneNum;
