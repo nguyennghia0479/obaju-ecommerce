@@ -26,6 +26,9 @@ import java.util.Objects;
 @Entity
 @Table(name = ColumnEntity.Order.TABLE_NAME)
 public class Order extends BaseEntity {
+    @Column(name = ColumnEntity.Order.CODE, nullable = false)
+    private String code;
+
     @Column(name = ColumnEntity.Order.TOTAL_PRICE, nullable = false)
     private Double totalPrice;
 
@@ -35,6 +38,10 @@ public class Order extends BaseEntity {
     @Column(name = ColumnEntity.Order.PAYMENT, nullable = false)
     @Enumerated(EnumType.STRING)
     private Payment payment;
+
+    @Column(name = ColumnEntity.Order.STATUS_ORDER, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusOrder statusOrder;
 
     @OneToMany(mappedBy = ColumnEntity.Order.ORDER_MAP)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -51,6 +58,12 @@ public class Order extends BaseEntity {
         MASTER_CARD,
         PAYPAL,
         ONLINE_BANKING
+    }
+
+    public enum StatusOrder {
+        CANCELLED,
+        PREPARED,
+        RECEIVED
     }
 
     @Override
