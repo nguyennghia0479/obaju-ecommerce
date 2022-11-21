@@ -35,7 +35,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<StockDTO> findAll() {
-        Sort sort = Sort.by("lastModifiedAt").ascending();
+        Sort sort = Sort.by("lastModifiedAt").descending();
         return stockRepository.findAll(sort)
                 .stream()
                 .map(StockMapper.INSTANCE::stockToStockDTO)

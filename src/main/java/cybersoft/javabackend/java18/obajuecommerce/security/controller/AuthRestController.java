@@ -4,6 +4,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
 import cybersoft.javabackend.java18.obajuecommerce.security.dto.LoginDTO;
 import cybersoft.javabackend.java18.obajuecommerce.security.dto.RegisterDTO;
+import cybersoft.javabackend.java18.obajuecommerce.security.dto.UserUpdateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.security.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,13 @@ public class AuthRestController {
         return ResponseUtils.get(authService.register(dto), HttpStatus.OK);
     }
 
-//    @PostMapping("/users/get")
-//    public ResponseEntity<ResponseDTO> findUserByUsername(@RequestParam("username") String username) {
-//        return ResponseUtils.get(authService.findByUsername(username), HttpStatus.OK);
-//    }
+    @PostMapping("/customer-account")
+    public ResponseEntity<ResponseDTO> findUserByUsername(@RequestParam("username") String username) {
+        return ResponseUtils.get(authService.findByUsername(username), HttpStatus.OK);
+    }
+
+    @PutMapping("/customer-account")
+    public ResponseEntity<ResponseDTO> updateUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        return ResponseUtils.get(authService.updateUser(userUpdateDTO), HttpStatus.OK);
+    }
 }

@@ -12,10 +12,7 @@ import cybersoft.javabackend.java18.obajuecommerce.common.exception.DuplicateExc
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.FileException;
 import cybersoft.javabackend.java18.obajuecommerce.common.exception.ResourceNotFoundException;
 import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestController;
-import cybersoft.javabackend.java18.obajuecommerce.common.utils.ConvertUtils;
-import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
-import cybersoft.javabackend.java18.obajuecommerce.common.utils.FileExceptionMessageUtils;
-import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResourceNotFoundMessageUtils;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.*;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Sort;
@@ -155,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
     private void checkProductNameIsUnique(ProductUpdateDTO productUpdateDTO, String name) {
         if (productRepository.getByName(productUpdateDTO.getName()).isPresent()
                 && !productUpdateDTO.getName().equals(name))
-            throw new DuplicateException("Product name is existed");
+            throw new DuplicateException(DuplicateMessageUtils.PRODUCT_NAME_DUPLICATE);
     }
 
     private String generateCode(String subcategoryCode) {

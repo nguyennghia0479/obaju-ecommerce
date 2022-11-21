@@ -13,8 +13,11 @@ import java.util.UUID;
 @Builder
 public class OrderDTO implements Serializable {
     private UUID id;
+    private String code;
     private Double totalPrice;
     private String address;
     private Order.Payment payment;
     private String username;
+    private Order.StatusOrder statusOrder;
+    private String orderDate;
 }

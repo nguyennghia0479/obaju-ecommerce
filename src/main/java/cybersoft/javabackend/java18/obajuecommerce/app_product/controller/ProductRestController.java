@@ -5,7 +5,10 @@ import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductUpdate
 import cybersoft.javabackend.java18.obajuecommerce.app_product.service.ProductService;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.OperationUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
+import cybersoft.javabackend.java18.obajuecommerce.role.model.Operation;
+import cybersoft.javabackend.java18.obajuecommerce.security.authorization.SecurityOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +61,7 @@ public class ProductRestController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.CREATE_NEW, type = Operation.Type.SAVE_OR_UPDATE)
     @PostMapping(value = "/admin/products", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseDTO> createProduct(@ModelAttribute @Valid ProductCreateDTO productCreateDTO, BindingResult result) {
         if(result.hasErrors()) {
@@ -67,12 +71,14 @@ public class ProductRestController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.UPDATE, type = Operation.Type.SAVE_OR_UPDATE)
     @PutMapping(value = "/admin/products", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseDTO> updateProduct(@ModelAttribute @Valid ProductUpdateDTO productUpdateDTO, BindingResult result) {
         return ResponseUtils.get(productService.update(productUpdateDTO), HttpStatus.CREATED);
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.DELETE_BY_ID, type = Operation.Type.REMOVE)
     @DeleteMapping("/admin/products/{id}")
     public ResponseEntity<ResponseDTO> deleteProductById(@PathVariable("id") UUID id) {
         productService.deleteById(id);
@@ -80,6 +86,7 @@ public class ProductRestController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @SecurityOperation(name = OperationUtils.DELETE_BY_ID, type = Operation.Type.REMOVE)
     @DeleteMapping("/admin/products/{id}/images")
     public ResponseEntity<ResponseDTO> deleteImagesByProductId(@PathVariable("id") UUID id) {
         productService.deleteImagesByProductId(id);
