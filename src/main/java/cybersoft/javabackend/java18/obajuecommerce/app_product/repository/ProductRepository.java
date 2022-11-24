@@ -1,6 +1,7 @@
 package cybersoft.javabackend.java18.obajuecommerce.app_product.repository;
 
 import cybersoft.javabackend.java18.obajuecommerce.app_product.model.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +36,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             where p.subcategory.id = sc.id
             and sc.nameURL = ?1
             """)
-    List<Product> findAllBySubcategoryName(String name);
+    List<Product> findAllBySubcategoryName(String name, Pageable pageable);
 }

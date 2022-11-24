@@ -10,4 +10,5 @@ public class FileExceptionMessageUtils {
     public static final String IMAGE_NOT_FOUND = "Image not found";
     public static final String UPLOAD_IMAGE_ERROR = "Error to upload image";
     public static final String DELETE_ERROR_FROM_ROOT = "Error to delete image from root folder";
+    public static final String EXPORT_FILE_ERROR = "Error to export file";
 }

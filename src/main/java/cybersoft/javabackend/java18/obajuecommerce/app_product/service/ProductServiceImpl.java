@@ -15,12 +15,16 @@ import cybersoft.javabackend.java18.obajuecommerce.common.image.FileRestControll
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.*;
 import cybersoft.javabackend.java18.obajuecommerce.config.FileConfig;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,11 +57,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductIncludeSubcategoryDTO> findAllIncludeSubcategoryDTO() {
-        Sort sort = Sort.by("lastModifiedAt").descending();
-        return productRepository.findAll(sort)
+    public ByteArrayInputStream exportExcel(int page, int size, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<ProductIncludeSubcategoryDTO> products = productRepository.findAll(pageable)
                 .stream()
                 .map(ProductMapper.INSTANCE::productToProductIncludeSubcategoryDTO)
+                .toList();
+        return ProductToExcel.productToExcel(products);
+    }
+
+    @Override
+    public List<ProductIncludeSubcategoryDTO> findAllIncludeSubcategoryDTO(int page, int size, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return productRepository.findAll(pageable)
+                .stream()
+                .map(ProductMapper.INSTANCE::productToProductIncludeSubcategoryDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductDTO> findAllBySubcategoryName(String name, int page, int size, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return productRepository.findAllBySubcategoryName(name, pageable)
+                .stream()
+                .map(ProductMapper.INSTANCE::productToProductDTO)
                 .toList();
     }
 
@@ -69,16 +92,15 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    @Override
-    public List<ProductDTO> findAllBySubcategoryName(String name) {
-        return productRepository.findAllBySubcategoryName(name)
-                .stream()
-                .map(ProductMapper.INSTANCE::productToProductDTO)
-                .toList();
-    }
-
+    @Cacheable("Product")
     @Override
     public ProductIncludeSubcategoryDTO findById(UUID id) {
+        try {
+            System.out.println("Going to sleep for 5 Secs.. to simulate backend call.");
+            Thread.sleep(1000 * 5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return productRepository.findById(id)
                 .map(ProductMapper.INSTANCE::productToProductIncludeSubcategoryDTO)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
@@ -130,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundMessageUtils.PRODUCT_ID_NOT_FOUND));
-        if(!product.getStocks().isEmpty()) {
+        if (!product.getStocks().isEmpty()) {
             throw new DeleteException(DeleteMessageUtils.DELETE_PRODUCT_FAILED);
         }
         product.getImages().forEach(image -> imageService.deleteById(image.getId()));

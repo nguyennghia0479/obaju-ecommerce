@@ -4,18 +4,27 @@ import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductCreate
 import cybersoft.javabackend.java18.obajuecommerce.app_product.dto.ProductUpdateDTO;
 import cybersoft.javabackend.java18.obajuecommerce.app_product.service.ProductService;
 import cybersoft.javabackend.java18.obajuecommerce.common.model.ResponseDTO;
+import cybersoft.javabackend.java18.obajuecommerce.common.utils.DateTimeUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.DeleteMessageUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.OperationUtils;
 import cybersoft.javabackend.java18.obajuecommerce.common.utils.ResponseUtils;
 import cybersoft.javabackend.java18.obajuecommerce.role.model.Operation;
 import cybersoft.javabackend.java18.obajuecommerce.security.authorization.SecurityOperation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,26 +37,73 @@ public class ProductRestController {
         this.productService = productService;
     }
 
+    private Sort.Direction getSortDirection(String direction) {
+        if (direction.equals("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equals("desc")) {
+            return Sort.Direction.DESC;
+        }
+        return Sort.Direction.ASC;
+    }
+
+    private List<Order> getOrder(String[] sort) {
+        List<Order> orders = new ArrayList<Order>();
+        if (sort[0].contains(",")) {
+            // will sort more than 2 fields
+            // sortOrder="field, direction"
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            // sort=[field, direction]
+            orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+        }
+        return orders;
+    }
+
     @GetMapping("/products/select-color")
     public ResponseEntity<ResponseDTO> getColors() {
         return ResponseUtils.get(productService.findAllColor(), HttpStatus.OK);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<ResponseDTO> findProducts() {
-        return ResponseUtils.get(productService.findAllIncludeSubcategoryDTO(), HttpStatus.OK);
-    }
-
     @GetMapping("/subcategories/products/select-products")
     public ResponseEntity<ResponseDTO> getProductBySubcategoryId(@RequestParam(value = "subcategoryId", required = false) UUID id) {
-        if(id != null)
+        if (id != null)
             return ResponseUtils.get(productService.findAllBySubcategoryId(id), HttpStatus.OK);
         return ResponseUtils.get(null, HttpStatus.OK);
     }
 
+    @GetMapping("/products/export-excel")
+    public ResponseEntity<Resource> exportFileExcel(@RequestParam(value = "size", defaultValue = "2") int size,
+                                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "id,desc") String[] sort) {
+        List<Order> orders = getOrder(sort);
+        String currentDateTime = DateTimeUtils.now();
+        String filename = "products_" + currentDateTime + ".xlsx";
+        InputStreamResource file = new InputStreamResource(productService.exportExcel(page, size, Sort.by(orders)));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<ResponseDTO> findProducts(@RequestParam(value = "size", defaultValue = "2") int size,
+                                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "id,desc") String[] sort) {
+        List<Order> orders = getOrder(sort);
+        return ResponseUtils.get(productService.findAllIncludeSubcategoryDTO(page, size, Sort.by(orders)), HttpStatus.OK);
+    }
+
     @GetMapping("/products/subcategory/{subcategory-name}")
-    public ResponseEntity<ResponseDTO> findProductsBySubcategoryName(@PathVariable("subcategory-name") String name) {
-        return ResponseUtils.get(productService.findAllBySubcategoryName(name), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> findProductsBySubcategoryName(@PathVariable("subcategory-name") String name,
+                                                                     @RequestParam(value = "size", defaultValue = "2") int size,
+                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "id,desc") String[] sort) {
+        List<Order> orders = getOrder(sort);
+        return ResponseUtils.get(productService.findAllBySubcategoryName(name, page, size, Sort.by(orders)), HttpStatus.OK);
     }
 
     @GetMapping("/products/{id}")
@@ -64,7 +120,7 @@ public class ProductRestController {
     @SecurityOperation(name = OperationUtils.CREATE_NEW, type = Operation.Type.SAVE_OR_UPDATE)
     @PostMapping(value = "/admin/products", consumes = {"multipart/form-data"})
     public ResponseEntity<ResponseDTO> createProduct(@ModelAttribute @Valid ProductCreateDTO productCreateDTO, BindingResult result) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return ResponseUtils.error(result, HttpStatus.BAD_REQUEST);
         }
         return ResponseUtils.get(productService.save(productCreateDTO), HttpStatus.CREATED);
